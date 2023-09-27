@@ -1,9 +1,7 @@
 import React from "react";
 import { Flex, Heading, Spacer, HStack, Text, Button, Icon } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
-import { ImStatsBars} from "react-icons/im";
-import { ImBook } from "react-icons/im";
-import { ImHome3 } from "react-icons/im";
+import { ImStatsBars, ImBook, ImHome3 } from "react-icons/im";
 
 
 const Header = () => {

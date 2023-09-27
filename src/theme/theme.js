@@ -8,4 +8,13 @@ export const customTheme = extendTheme({
     warning: "#FFD54F",
     danger: "#FF1744"
   },
+  components: {
+    Popover: {
+      variants: {
+        responsive: {
+          content: { width: "unset" },
+        },
+      },
+    }
+  }
 })
