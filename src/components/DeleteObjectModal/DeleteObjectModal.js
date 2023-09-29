@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 
 import {
     Modal,
@@ -26,23 +26,13 @@ import {
   import supabaseService from "../../services/supabaseService";
 
 
-
-const DeleteObjectModal = ({isOpen, onClose}) => {
+const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObjectIsDeteted}) => {
 
     const toast = useToast();
-    const { getObjects, deleteObject } = supabaseService();
+    const { deleteObject } = supabaseService();
 
-    const [objects, setObjects] = useState([]);
-
-    const fetchUserObjects = () => {
-        getObjects("c8ab3e1f-9ee1-43fc-9db0-0cf77878e5f8") // временное решение
-            .then(res => {
-                setObjects(res.objects);
-        });
-    }
-
-    const removeObject = (objectId) => {
-        deleteObject(objectId)
+    const removeObject = async (objectId) => {
+        await deleteObject(objectId)
         .then(res => {
             if(res.error?.message) {
                 toast({
@@ -53,11 +43,8 @@ const DeleteObjectModal = ({isOpen, onClose}) => {
                     });
             }
         });
+        setObjectIsDeteted(!objectIsDeleted);
     };
-
-    useEffect(() => {
-        fetchUserObjects();
-    }, [objects]);
 
     return (
         <>
@@ -67,7 +54,8 @@ const DeleteObjectModal = ({isOpen, onClose}) => {
             <ModalHeader>Удалить объект</ModalHeader>
             <ModalCloseButton />
             <ModalBody maxH="300px" overflowY="auto">
-            {objects.map(obj => ((
+            {!objects ? <Text textAlign="center">Объекты отсутствуют</Text> : null }
+            {objects && objects.map(obj => ((
                 <Box key={obj.id} w="100%" mt="4" p="2" boxShadow="base" borderRadius={6}>
                     <Flex justifyContent="space-between" alignItems="center">
                         <Text w="380px" noOfLines={1}>{obj.object_name}</Text>

@@ -19,7 +19,7 @@ import {
 
   import supabaseService from '../../services/supabaseService';
 
-  const AddObjectModal = ({isOpen, onClose}) => {
+  const AddObjectModal = ({isOpen, onClose, objectIsAdded, setObjectIsAdded}) => {
 
     const [objectInput, setObjectInput] = useState("");
     const [inputError, setInputError] = useState(false);
@@ -53,6 +53,7 @@ import {
       }
         setObjectInput("");
         setInputError(false);
+        setObjectIsAdded(!objectIsAdded);
     };
 
     const onObjectInputChange = (e) => {
