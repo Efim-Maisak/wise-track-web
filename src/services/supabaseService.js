@@ -51,9 +51,17 @@ const supabaseService = () => {
         .insert([
             { device_type_id: deviceTypeId, device_name: deviceName, object: objectId },
          ])
-        .select()
+        .select();
 
         return { error };
+    };
+
+    const postIndications = async (indicationsArr) => {
+        let { error } = await supabase
+        .from('indications')
+        .insert(indicationsArr);
+
+        return {error};
     };
 
     return {
@@ -62,7 +70,8 @@ const supabaseService = () => {
         postObjects,
         deleteObject,
         getDevices,
-        postDevices
+        postDevices,
+        postIndications
     };
 };
 

@@ -2,12 +2,15 @@ import React, {useState, useEffect} from "react";
 import { Box, Flex, Heading, Select, Menu, MenuList, MenuButton, MenuItem, IconButton, useDisclosure, Alert } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa6";
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
+import Devices from "../Devices/Devices";
+import RecordReadings from "../RecordReadings/RecordReadings";
 import AddObjectModal from "../AddObjectModal/AddObjectModal";
 import DeleteObjectModal from "../DeleteObjectModal/DeleteObjectModal";
 import AddDeviceModal from "../AddDeviceModal/AddDeviceModal";
-import Devices from "../Devices/Devices";
+
 import supabaseService from "../../services/supabaseService";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+
 
 const Objects = () => {
 
@@ -93,10 +96,10 @@ const Objects = () => {
                         variant='outline'
                     />
                     <MenuList>
-                        <MenuItem icon={<AddIcon />} onClick={onOpenAddModal}>
+                        <MenuItem icon={<AddIcon/>} onClick={onOpenAddModal}>
                         Добавить
                         </MenuItem>
-                        <MenuItem icon={<DeleteIcon />} onClick={onOpenDeleteModal}>
+                        <MenuItem icon={<DeleteIcon/>} onClick={onOpenDeleteModal}>
                         Удалить
                         </MenuItem>
                     </MenuList>
@@ -107,6 +110,7 @@ const Objects = () => {
             <Box as="section" mt="4" p="4 0 4 4" w="620px" boxShadow="base" borderRadius="8px">
                 <Devices onOpenAddDeviceModal={onOpenAddDeviceModal} devices={devices}/>
             </Box>
+            <RecordReadings devices={devices}/>
             <AddObjectModal
             objectIsAdded={objectIsAdded}
             setObjectIsAdded={setObjectIsAdded}

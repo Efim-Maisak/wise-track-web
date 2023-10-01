@@ -27,7 +27,7 @@ const Header = () => {
             <Spacer/>
             <HStack spacing="20px">
                 <Text>mail@mail.com</Text>
-                <Button colorScheme="blue">Выйти</Button>
+                <Button colorScheme="teal">Выйти</Button>
             </HStack>
         </Flex>
     );
