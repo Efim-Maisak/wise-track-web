@@ -31,25 +31,30 @@ import {
     const userId = "c8ab3e1f-9ee1-43fc-9db0-0cf77878e5f8"; // временное решение
 
     const postUserObject = (objectName, userId) => {
-      if(objectInput !== "") {
-        postObjects(objectName, userId)
-        .then( res => {
-          if(res.error?.message) {
-            toast({
-              description: `Ошибка: ${res.error.message}`,
-              status: 'error',
-              duration: 5000,
-              isClosable: true
-              });
-          } else {
-            toast({
-              description: "Новый объект добавлен",
-              status: 'success',
-              duration: 5000,
-              isClosable: true
+      try {
+          if(objectInput !== "") {
+            postObjects(objectName, userId)
+            .then( res => {
+              if(res.error?.message) {
+                toast({
+                  description: `Ошибка: ${res.error.message}`,
+                  status: 'error',
+                  duration: 5000,
+                  isClosable: true
+                  });
+              } else {
+                toast({
+                  description: "Новый объект добавлен",
+                  status: 'success',
+                  duration: 5000,
+                  isClosable: true
+                });
+              }
             });
           }
-        });
+        } catch(e) {
+        throw new Error(e.message);
+
       }
         setObjectInput("");
         setInputError(false);

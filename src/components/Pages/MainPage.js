@@ -7,7 +7,7 @@ const MainPage = ()=> {
         <>
         <Box as="div" h="100%" w="100%">
             <Container maxW='4xl' as="div" p="0">
-                <Flex flexDirection="column" justifyContent="center" alignItems="center">
+                <Flex minH="80vh" flexDirection="column" justifyContent="center" alignItems="center">
                     <Objects/>
                 </Flex>
             </Container>

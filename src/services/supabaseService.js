@@ -64,6 +64,15 @@ const supabaseService = () => {
         return {error};
     };
 
+    const getIndications = async (objectId) => {
+        let { data: indications, error } = await supabase
+        .from('indications')
+        .select(`id, billing_period, value, monthly_change, device_id!inner(id, device_name, object, device_type_id(type_code, type_name, units))`)
+        .eq('device_id.object', objectId);
+
+        return {indications, error};
+    };
+
     return {
         getDevicesTypes,
         getObjects,
@@ -71,7 +80,8 @@ const supabaseService = () => {
         deleteObject,
         getDevices,
         postDevices,
-        postIndications
+        postIndications,
+        getIndications
     };
 };
 

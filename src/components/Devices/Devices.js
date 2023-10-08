@@ -1,9 +1,9 @@
 import React, {useState} from "react"
-import { Box, Heading, Flex, Text, useDisclosure} from "@chakra-ui/react";
+import { Box, Button, Heading, Flex, Text, useDisclosure} from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import DeviceModal from "../DeviceModal/DeviceModal";
 
-const Devices = ({devices, onOpenAddDeviceModal}) => {
+const Devices = ({devices, objects, onOpenAddDeviceModal}) => {
 
     const { isOpen: isOpenDeviceModal, onOpen: onOpenDeviceModal, onClose: onCloseDeviceModal } = useDisclosure();
 
@@ -25,14 +25,34 @@ const Devices = ({devices, onOpenAddDeviceModal}) => {
         <>
             <Box as="section" w="620px">
                 <Heading p="4" as="h3" size="md">Мои приборы учета</Heading>
-                <Flex mt="4" w="100%" p="4" gap="2" flexWrap="nowrap" overflowX="auto">
-                    <Box
+                <Flex
+                w="100%"
+                p="4"
+                gap="2"
+                flexWrap="nowrap"
+                overflowX="auto"
+                sx={{
+                    '&::-webkit-scrollbar': {
+                    height: "8px",
+                    borderRadius: "32px",
+                    backgroundColor: `rgba(0, 0, 0, 0.1)`,
+                    },
+                    '&::-webkit-scrollbar-track': {
+                    borderRadius: "32px"
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: `rgba(0, 0, 0, 0.1)`,
+                    borderRadius: "32px"
+                    }
+                    }}
+                >
+                    <Button
                     as="button"
                     flex="0 0 auto"
                     width="120px"
                     height="120px"
                     transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    border="2px"
+                    border="2px solid #a9a9a9"
                     borderRadius={8}
                     px="8px"
                     fontSize="14px"
@@ -43,14 +63,11 @@ const Devices = ({devices, onOpenAddDeviceModal}) => {
                         bg: '#dddfe2',
                         transform: "scale(0.98)",
                     }}
-                    _focus={{
-                        boxShadow:
-                        "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-                    }}
+                    isDisabled={objects && objects.length === 0}
                     onClick={onOpenAddDeviceModal}
                     >
-                    <AddIcon boxSize={8}/>
-                    </Box>
+                    <AddIcon boxSize={8} color="#a9a9a9"/>
+                    </Button>
                     { devices && devices.map( (device, index) => ((
                         <Box
                         key={device.id}

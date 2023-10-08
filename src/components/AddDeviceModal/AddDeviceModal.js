@@ -32,12 +32,16 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
     const toast = useToast();
 
     const fetchDevicesTypes = async () => {
-        const res = await getDevicesTypes();
-        if(res.devices_types) {
-            setTypes(res.devices_types)
-        }
-        if(res.error) {
-            throw new Error(res.error.message);
+        try {
+            const res = await getDevicesTypes();
+            if(res.devices_types) {
+                setTypes(res.devices_types);
+            }
+            if(res.error) {
+                throw new Error(res.error.message);
+            }
+        } catch(e) {
+            throw new Error(e.message);
         }
     };
 
@@ -55,28 +59,32 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
     };
 
     const addUserDevice = async (objectId, deviceTypeId, deviceName) => {
-        if (deviceNameInput) {
-            await postDevices(objectId, deviceTypeId, deviceName).then(res => {
-                if(res.error?.message) {
-                    toast({
-                      description: `Ошибка: ${res.error.message}`,
-                      status: 'error',
-                      duration: 5000,
-                      isClosable: true
-                      });
-                  } else {
-                    toast({
-                      description: "Новый прибор учета добавлен",
-                      status: 'success',
-                      duration: 5000,
-                      isClosable: true
-                    });
-                  }
-                  setDeviceTypeSelect("");
-                  setDeviceNameInput("");
-                  setInputError(false);
-                  setDeviceIsAdded(!deviceIsAdded);
-            });
+        try {
+            if (deviceNameInput) {
+                await postDevices(objectId, deviceTypeId, deviceName).then(res => {
+                    if(res.error?.message) {
+                        toast({
+                          description: `Ошибка: ${res.error.message}`,
+                          status: 'error',
+                          duration: 5000,
+                          isClosable: true
+                          });
+                      } else {
+                        toast({
+                          description: "Новый прибор учета добавлен",
+                          status: 'success',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      }
+                      setDeviceTypeSelect("");
+                      setDeviceNameInput("");
+                      setInputError(false);
+                      setDeviceIsAdded(!deviceIsAdded);
+                });
+            }
+        } catch(e) {
+            throw new Error(e.message);
         }
     }
 

@@ -32,17 +32,21 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
     const { deleteObject } = supabaseService();
 
     const removeObject = async (objectId) => {
-        await deleteObject(objectId)
-        .then(res => {
-            if(res.error?.message) {
-                toast({
-                    description: `Ошибка: ${res.error.message}`,
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true
-                    });
-            }
-        });
+        try {
+            await deleteObject(objectId)
+            .then(res => {
+                if(res.error?.message) {
+                    toast({
+                        description: `Ошибка: ${res.error.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true
+                        });
+                }
+            });
+        } catch(e) {
+            throw new Error(e.message);
+        }
         setObjectIsDeteted(!objectIsDeleted);
     };
 
@@ -53,7 +57,24 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
           <ModalContent>
             <ModalHeader>Удалить объект</ModalHeader>
             <ModalCloseButton />
-            <ModalBody maxH="300px" overflowY="auto">
+            <ModalBody
+            maxH="300px"
+            overflowY="auto"
+            sx={{
+                '&::-webkit-scrollbar': {
+                width: "8px",
+                borderRadius: "32px",
+                backgroundColor: `rgba(0, 0, 0, 0.1)`,
+                },
+                '&::-webkit-scrollbar-track': {
+                borderRadius: "32px"
+                },
+                '&::-webkit-scrollbar-thumb': {
+                backgroundColor: `rgba(0, 0, 0, 0.1)`,
+                borderRadius: "32px",
+                }
+                }}
+            >
             {!objects ? <Text textAlign="center">Объекты отсутствуют</Text> : null }
             {objects && objects.map(obj => ((
                 <Box key={obj.id} w="100%" mt="4" p="2" boxShadow="base" borderRadius={6}>

@@ -16,6 +16,7 @@ import {
     HStack,
     Text,
     useToast,
+    Spacer,
   } from '@chakra-ui/react'
 
   import supabaseService from "../../services/supabaseService";
@@ -23,64 +24,128 @@ import {
 
   const RecordReadingsModal = ({isOpen, onClose, devices}) => {
 
-    const [inputError, setInputError] = useState(false);
     const [inputs, setInputs] = useState(null);
     const [monthInput, setMonthInput] = useState("");
+    const [inputError, setInputError] = useState({});
+    const [monthInputError, setMonthInputError] = useState(true);
+    const [globalInputError, setGlobalInputError] = useState(true);
 
     const { postIndications } = supabaseService();
     const toast = useToast();
 
     function createStateObj(devicesArr) {
-
         let state = {};
 
         for(let i = 0; i < devicesArr.length; i++) {
-            state[devicesArr[i]?.device_name] = { value: "", id: devicesArr[i].id};
+            state[devicesArr[i]?.device_name] = { value: "", device_id: devicesArr[i].id};
             }
 
         return state;
     }
 
+    function createErrorInputObj(devicesArr) {
+        let state = {};
+
+        for(let i = 0; i < devicesArr.length; i++) {
+            state[devicesArr[i]?.device_name] = { error: true};
+            }
+
+        return state;
+    }
 
     const handleInputChange = (e, deviceName) => {
-
-        if(e.target.value === "") {
-            setInputError(true);
-        }
-        if(inputs) {
-            setInputs((prevInputs) => ({...prevInputs, [deviceName]: { value: e.target.value }}));
-        }
+        setInputs((prevInputs) => ({...prevInputs, [deviceName]: { ...prevInputs[deviceName], value: e.target.value }}));
+        setInputError((prevInputs) => ({...prevInputs, [deviceName]: { error: false }}));
+        if(!e.target.value) {
+            setInputError((prevInputs) => ({...prevInputs, [deviceName]: { error: true }}));
+        };
     };
 
     const handleMonthInputChange = (e) => {
         setMonthInput(e.target.value);
+        setMonthInputError(false);
+        if(!e.target.value) {
+            setMonthInputError(true);
+        }
     };
+
+    const clearInputsValues = (inputsObj) =>  {
+        for (let key in inputsObj) {
+            inputs[key].value = "";
+        }
+        setMonthInput("");
+    };
+
+    const resetInputsErrors = (errorObj) =>  {
+        for (let key in errorObj) {
+            inputs[key].error = true;
+        }
+    };
+
+    function validateInputsValues(errorObj) {
+        if(Object.values(errorObj).some(elem => {
+            if(elem.error === true) {
+                return true;
+            }})) {
+            setGlobalInputError(true);
+        } else if(Object.values(errorObj).every(elem => {
+            if(elem.error === false) {
+                return true;
+            }})) {
+            setGlobalInputError(false);
+        }
+    };
+
+    const composeData = (inputsObj, monthInputState) => {
+        let data = [];
+        const monthInputClone = JSON.parse(JSON.stringify(inputsObj));
+        for (let key in monthInputClone) {
+            monthInputClone[key].billing_period = monthInputState;
+            data.push(monthInputClone[key]);
+        }
+
+        return data;
+    };
+
+    const sendIndications = async () => {
+        if(!globalInputError && !monthInputError) {
+            try {
+                await postIndications(composeData(inputs, monthInput)).then(res => {
+                    if(res.error?.message) {
+                        toast({
+                          description: `Ошибка: ${res.error.message}`,
+                          status: 'error',
+                          duration: 5000,
+                          isClosable: true
+                          });
+                      } else {
+                        toast({
+                          description: "Показания записаны",
+                          status: 'success',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      }
+                    });
+            } catch(e) {
+                throw new Error(e.message);
+            }
+                clearInputsValues(inputs);
+                setMonthInputError(true);
+                resetInputsErrors(inputError);
+                setGlobalInputError(true);
+        }
+    }
 
     useEffect(() => {
         setInputs(createStateObj(devices));
+        setInputError(createErrorInputObj(devices));
     }, [devices]);
 
-    const sendIndications = async (indicationsArr) => {
-        await postIndications(indicationsArr).then(res => {
-            if(res.error?.message) {
-                toast({
-                  description: `Ошибка: ${res.error.message}`,
-                  status: 'error',
-                  duration: 5000,
-                  isClosable: true
-                  });
-              } else {
-                toast({
-                  description: "Показания записаны",
-                  status: 'success',
-                  duration: 5000,
-                  isClosable: true
-                });
-              }
-            });
-            // очистить inputs value
-            setInputError(false);
-        }
+    useEffect(() => {
+        validateInputsValues(inputError);
+    }, [inputError]);
+
 
     return (
         <>
@@ -89,19 +154,22 @@ import {
             <ModalContent>
                 <ModalHeader>Записать показания приборов учета</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody pt={8}>
                 <Flex justifyContent="space-between" alignItems="center">
                 <FormLabel>Платежный период:</FormLabel>
                 <Input w="240px" type="month" value={monthInput} onChange={handleMonthInputChange}></Input>
                 </Flex>
-                {console.log(inputs)}
-                {console.log(monthInput)}
                 {devices && devices.map( device => (
-                    <FormControl mt={4} key={device.device_name} isInvalid={inputError}>
+                    <FormControl mt={4} key={device.device_name}>
                     <Flex justifyContent="space-between" alignItems="center">
                         <FormLabel>{device.device_name}</FormLabel>
                         <HStack w="160px">
-                        <Input w="100px" type="number" value={inputs?.[device.device_name]?.value || ""} onChange={(e) => handleInputChange(e, device.device_name)}/>
+                        <Input
+                        w="100px"
+                        type="number"
+                        value={inputs?.[device.device_name]?.value || ""}
+                        onChange={(e) => handleInputChange(e, device.device_name)}
+                        />
                         <Text w="60px">{device.device_type_id.units}</Text>
                         </HStack>
                     </Flex>
@@ -109,15 +177,17 @@ import {
                         ))}
                 </ModalBody>
                 <ModalFooter mt={4}>
-                <Button
-                colorScheme='blue'
-                isDisabled={inputError}
-                onClick={() => {
-                    onClose();
-                    //sendIdications(indicationsArr);
-                    }}>
-                    Записать
-                </Button>
+                        { monthInputError || globalInputError ? <Text fontSize="sm">Заполните показания</Text> : null}
+                        <Spacer/>
+                        <Button
+                        colorScheme='blue'
+                        isDisabled={ monthInputError || globalInputError }
+                        onClick={() => {
+                            onClose();
+                            sendIndications();
+                            }}>
+                            Записать
+                        </Button>
                 </ModalFooter>
           </ModalContent>
         </Modal>
