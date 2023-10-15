@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Flex } from "@chakra-ui/react";
-import IndicationsList from "../IndicationsList/IndicationsList";
-import supabaseService from "../../services/supabaseService";
+import { Container, Flex, Spinner, Box } from "@chakra-ui/react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import IndicationsList from "../IndicationsList/IndicationsList";
+import IndicationsFilter from "../IndicationsFilter/IndicationsFilter";
+
+import supabaseService from "../../services/supabaseService";
+
+
 
 const HistoryPage = () => {
 
@@ -10,18 +14,26 @@ const HistoryPage = () => {
 
     const [objId, setObjId] = useState(objectIdFromStorage);
     const [composedIndications, setComposedIndications] = useState(null);
+    const [filteredIndications, setFilteredIndications] = useState(null);
+    const [yearOptions, setYearOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
 
     const { getIndications } = supabaseService();
 
     const fetchIndications = async (objectId) => {
+        setLoading(true);
         try {
             const res = await getIndications(objectId);
             if(res.indications) {
                 setComposedIndications(composeIndicationsData(res.indications));
+                setFilteredIndications(composeIndicationsData(res.indications));
+                createYearOptions(composeIndicationsData(res.indications));
+                setLoading(false);
             }
 
         } catch(e) {
+            setLoading(false);
             throw new Error(e.message);
         }
     }
@@ -57,6 +69,17 @@ const HistoryPage = () => {
         }));
     };
 
+    const createYearOptions = (indicationsArr) => {
+        let yearArr = [];
+
+        if(indicationsArr) {
+            indicationsArr.forEach( elem => {
+                yearArr.push(Object.keys(elem)[0].slice(-4));
+            });
+        }
+        setYearOptions([...new Set(yearArr)]);
+    };
+
     useEffect(() => {
         fetchIndications(objId);
     }, []);
@@ -66,7 +89,28 @@ const HistoryPage = () => {
         <>
         <Container maxW='4xl' as="div" p="0">
             <Flex minH="80vh" flexDirection="column" justifyContent="center" alignItems="center">
-                <IndicationsList indications={composedIndications}/>
+                {!loading
+                ?
+                <Box>
+                    <IndicationsFilter
+                    setFilteredIndications={setFilteredIndications}
+                    indications={composedIndications}
+                    yearOptions={yearOptions}
+                    />
+                    <IndicationsList
+                    indications={filteredIndications}
+                    />
+                </Box>
+                :
+                <Spinner
+                mt={16}
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="teal.500"
+                size="xl"
+                />
+                }
             </Flex>
         </Container>
         </>

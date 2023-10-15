@@ -56,6 +56,15 @@ const supabaseService = () => {
         return { error };
     };
 
+    const deleteDevice = async (deviceId) => {
+        let { error } = await supabase
+        .from('devices')
+        .delete()
+        .eq('id', deviceId );
+
+        return { error };
+    }
+
     const postIndications = async (indicationsArr) => {
         let { error } = await supabase
         .from('indications')
@@ -67,11 +76,32 @@ const supabaseService = () => {
     const getIndications = async (objectId) => {
         let { data: indications, error } = await supabase
         .from('indications')
-        .select(`id, billing_period, value, monthly_change, device_id!inner(id, device_name, object, device_type_id(type_code, type_name, units))`)
+        .select(`id, billing_period, value, monthly_change, created_at, device_id!inner(id, device_name, object, device_type_id(type_code, type_name, units))`)
         .eq('device_id.object', objectId);
 
         return {indications, error};
     };
+
+    const getLastBillingPeriod = async (objectId) => {
+        let { data: last_indication, error } = await supabase
+        .from('indications')
+        .select(`id, billing_period, device_id!inner(object), created_at`)
+        .eq('device_id.object', objectId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+        return { last_indication, error };
+    };
+
+    const getLastIndication = async (objectId, billingPeriod) => {
+        let { data: indication, error } = await supabase
+        .from('indications')
+        .select(`id, billing_period, value, monthly_change, device_id!inner(id, device_name, object, device_type_id(type_code, type_name, units))`)
+        .eq('device_id.object', objectId).eq('billing_period', billingPeriod);
+
+        return {indication, error};
+    };
+
 
     return {
         getDevicesTypes,
@@ -80,8 +110,11 @@ const supabaseService = () => {
         deleteObject,
         getDevices,
         postDevices,
+        deleteDevice,
         postIndications,
-        getIndications
+        getIndications,
+        getLastBillingPeriod,
+        getLastIndication
     };
 };
 

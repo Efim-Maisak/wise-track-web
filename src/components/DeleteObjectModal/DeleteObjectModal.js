@@ -43,11 +43,11 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
                         isClosable: true
                         });
                 }
+                setObjectIsDeteted(!objectIsDeleted);
             });
         } catch(e) {
             throw new Error(e.message);
         }
-        setObjectIsDeteted(!objectIsDeleted);
     };
 
     return (

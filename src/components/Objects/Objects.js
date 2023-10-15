@@ -1,5 +1,20 @@
 import React, {useState, useEffect} from "react";
-import { Box, Flex, Heading, Select, Menu, MenuList, MenuButton, MenuItem, IconButton, useDisclosure, Alert, AlertIcon, Spinner } from "@chakra-ui/react";
+import {
+    Box,
+    Flex,
+    Heading,
+    Select,
+    Menu,
+    MenuList,
+    MenuButton,
+    MenuItem,
+    IconButton,
+    useDisclosure,
+    Alert,
+    AlertIcon,
+    Spinner
+    } from "@chakra-ui/react";
+
 import { FaBars } from "react-icons/fa6";
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import Devices from "../Devices/Devices";
@@ -7,9 +22,11 @@ import RecordReadings from "../RecordReadings/RecordReadings";
 import AddObjectModal from "../AddObjectModal/AddObjectModal";
 import DeleteObjectModal from "../DeleteObjectModal/DeleteObjectModal";
 import AddDeviceModal from "../AddDeviceModal/AddDeviceModal";
+import LastIndications from "../LastIndications/LastIndications";
 
 import supabaseService from "../../services/supabaseService";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+
 
 
 const Objects = () => {
@@ -24,6 +41,7 @@ const Objects = () => {
     const [objectIsAdded, setObjectIsAdded] = useState(false);
     const [objectIsDeleted, setObjectIsDeteted] = useState(false);
     const [deviceIsAdded, setDeviceIsAdded] = useState(false);
+    const [deviceIsDeleted, setDeviceIsDeleted] = useState(false);
 
     const { isOpen: isOpenAddModal, onOpen: onOpenAddModal, onClose: onCloseAddModal } = useDisclosure();
     const { isOpen: isOpenDeleteModal, onOpen: onOpenDeleteModal, onClose: onCloseDeleteModal } = useDisclosure();
@@ -76,7 +94,7 @@ const Objects = () => {
 
     useEffect(() => {
         fetchUserDevices(selectedObjectId);
-    }, [deviceIsAdded]);
+    }, [deviceIsAdded, deviceIsDeleted]);
 
 
     return (
@@ -90,11 +108,21 @@ const Objects = () => {
             onOpenAddModal={onOpenAddModal}
             onOpenDeleteModal={onOpenDeleteModal}
             onOpenAddDeviceModal={onOpenAddDeviceModal}
+            deviceIsDeleted={deviceIsDeleted}
+            setDeviceIsDeleted={setDeviceIsDeleted}
+            selectedObjectId={selectedObjectId}
             objects={objects}
             devices={devices}
             />
             :
-            <Spinner mt={16} thickness="4px" speed="0.65s" emptyColor="gray.200" color="teal.500" size="xl"/>
+            <Spinner
+            mt={16}
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="teal.500"
+            size="xl"
+            />
             }
             <AddObjectModal
             objectIsAdded={objectIsAdded}
@@ -120,7 +148,7 @@ const Objects = () => {
     );
 };
 
-const View = ({selectedObject, onChangeSеlectValue, onOpenAddModal, onOpenDeleteModal, onOpenAddDeviceModal, objects, devices}) => {
+const View = ({selectedObject, onChangeSеlectValue, onOpenAddModal, onOpenDeleteModal, onOpenAddDeviceModal, deviceIsDeleted, setDeviceIsDeleted, selectedObjectId, objects, devices}) => {
     return(
         <>
             {
@@ -159,10 +187,10 @@ const View = ({selectedObject, onChangeSеlectValue, onOpenAddModal, onOpenDelet
                         variant='outline'
                     />
                     <MenuList>
-                        <MenuItem icon={<AddIcon/>} onClick={onOpenAddModal}>
+                        <MenuItem icon={<AddIcon fontSize="16px"/>} onClick={onOpenAddModal}>
                         Добавить
                         </MenuItem>
-                        <MenuItem icon={<DeleteIcon/>} onClick={onOpenDeleteModal}>
+                        <MenuItem icon={<DeleteIcon fontSize="16px" color="red.500"/>} onClick={onOpenDeleteModal}>
                         Удалить
                         </MenuItem>
                     </MenuList>
@@ -170,8 +198,15 @@ const View = ({selectedObject, onChangeSеlectValue, onOpenAddModal, onOpenDelet
                 </Flex>
             </Box>
             <Box as="section" mt="4" p="4 0 4 4" w="620px" boxShadow="base" borderRadius="8px">
-                <Devices onOpenAddDeviceModal={onOpenAddDeviceModal} devices={devices} objects={objects}/>
+                <Devices
+                onOpenAddDeviceModal={onOpenAddDeviceModal}
+                deviceIsDeleted={deviceIsDeleted}
+                setDeviceIsDeleted={setDeviceIsDeleted}
+                devices={devices}
+                objects={objects}
+                />
             </Box>
+            <LastIndications selectedObjectId={selectedObjectId}/>
             <RecordReadings devices={devices}/>
         </>
     )

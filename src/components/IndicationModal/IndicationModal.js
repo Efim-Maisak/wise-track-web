@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import {
+    Badge,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -21,7 +22,24 @@ import {
 
 const IndicationModal = ({isOpen, onClose, indication}) => {
 
+    //const [indicationDate, setIndicationDate] = useState(null);
+
+
+    const formatDate = (dateString) => {
+        const options = {
+            day: 'numeric',
+            month: "numeric",
+            year: "numeric"
+          };
+
+        const timestamp = Date.parse(dateString);
+        const date = new Date(timestamp);
+
+        return date.toLocaleString("ru", options);
+    };
+
     if(!indication) return null
+
 
     return (
         <>
@@ -32,8 +50,16 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <Box p={4}>
+                        <Badge
+                        m={4}
+                        variant="solid"
+                        colorScheme="teal"
+                        fontSize="14px"
+                        >
+                        {formatDate(Object.values(indication)[0][0].created_at)}
+                        </Badge>
                         <TableContainer>
-                            <Table size='md'>
+                            <Table size="md">
                                 <Thead>
                                 <Tr>
                                     <Th>Прибор учета</Th>
@@ -43,15 +69,14 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
                                 </Tr>
                                 </Thead>
                                 <Tbody>
-                                {Object.values(indication)[0].map( (item, i) => ((
-                                    <Tr key={i}>
+                                {Object.values(indication)[0].map( item => ((
+                                    <Tr key={item.id}>
                                          <Td>{item.device_id.device_name}</Td>
                                          <Td isNumeric>{item.value}</Td>
                                          <Td isNumeric>{item.monthly_change || 0 }</Td>
                                          <Td>{item.device_id.device_type_id.units}</Td>
                                      </Tr>
                                 )))}
-
                                 </Tbody>
                             </Table>
                         </TableContainer>

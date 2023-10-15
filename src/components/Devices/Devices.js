@@ -3,7 +3,7 @@ import { Box, Button, Heading, Flex, Text, useDisclosure} from "@chakra-ui/react
 import { AddIcon } from "@chakra-ui/icons";
 import DeviceModal from "../DeviceModal/DeviceModal";
 
-const Devices = ({devices, objects, onOpenAddDeviceModal}) => {
+const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDeviceIsDeleted}) => {
 
     const { isOpen: isOpenDeviceModal, onOpen: onOpenDeviceModal, onClose: onCloseDeviceModal } = useDisclosure();
 
@@ -97,7 +97,13 @@ const Devices = ({devices, objects, onOpenAddDeviceModal}) => {
                     )))}
                 </Flex>
             </Box>
-            <DeviceModal isOpen={isOpenDeviceModal} onClose={onCloseDeviceModal} device={device}/>
+            <DeviceModal
+            isOpen={isOpenDeviceModal}
+            onClose={onCloseDeviceModal}
+            deviceIsDeleted={deviceIsDeleted}
+            setDeviceIsDeleted={setDeviceIsDeleted}
+            device={device}
+            />
         </>
     );
 };
