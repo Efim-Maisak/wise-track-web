@@ -22,7 +22,7 @@ import {
   import supabaseService from "../../services/supabaseService";
 
 
-  const RecordReadingsModal = ({isOpen, onClose, devices}) => {
+  const RecordReadingsModal = ({isOpen, onClose, indicationsIsAdded, setIndicationsIsAdded, devices}) => {
 
     const [inputs, setInputs] = useState(null);
     const [monthInput, setMonthInput] = useState("");
@@ -125,6 +125,7 @@ import {
                           duration: 5000,
                           isClosable: true
                         });
+                        setIndicationsIsAdded(!indicationsIsAdded);
                       }
                     });
             } catch(e) {
@@ -157,7 +158,7 @@ import {
                 <ModalBody pt={8}>
                 <Flex justifyContent="space-between" alignItems="center">
                 <FormLabel>Платежный период:</FormLabel>
-                <Input w="240px" type="month" value={monthInput} onChange={handleMonthInputChange}></Input>
+                <Input w="240px" type="month" value={monthInput} focusBorderColor="teal.600" onChange={handleMonthInputChange}></Input>
                 </Flex>
                 {devices && devices.map( device => (
                     <FormControl mt={4} key={device.device_name}>
@@ -167,6 +168,7 @@ import {
                         <Input
                         w="100px"
                         type="number"
+                        focusBorderColor="teal.600"
                         value={inputs?.[device.device_name]?.value || ""}
                         onChange={(e) => handleInputChange(e, device.device_name)}
                         />
@@ -180,7 +182,7 @@ import {
                         { monthInputError || globalInputError ? <Text fontSize="sm">Заполните показания</Text> : null}
                         <Spacer/>
                         <Button
-                        colorScheme='blue'
+                        colorScheme="teal"
                         isDisabled={ monthInputError || globalInputError }
                         onClick={() => {
                             onClose();

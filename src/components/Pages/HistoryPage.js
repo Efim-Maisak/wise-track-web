@@ -80,6 +80,20 @@ const HistoryPage = () => {
         setYearOptions([...new Set(yearArr)]);
     };
 
+    const sortIndicationsByDeviceName = (arr) => {
+        if(arr) {
+            arr.forEach(item => {
+                Object.values(item)[0].sort((a, b) => {
+                    if (a.device_id.device_name < b.device_id.device_name) return -1;
+                    if (a.device_id.device_name > b.device_id.device_name) return 1;
+                    return 0;
+                });
+            });
+
+            return arr;
+        }
+    };
+
     useEffect(() => {
         fetchIndications(objId);
     }, []);
@@ -88,17 +102,21 @@ const HistoryPage = () => {
     return (
         <>
         <Container maxW='4xl' as="div" p="0">
-            <Flex minH="80vh" flexDirection="column" justifyContent="center" alignItems="center">
+            <Flex mt={16} justifyContent="center">
+                <IndicationsFilter
+                maxW="100%"
+                setFilteredIndications={setFilteredIndications}
+                indications={composedIndications}
+                filteredIndications={filteredIndications}
+                yearOptions={yearOptions}
+                />
+            </Flex>
+            <Flex flexDirection="column" justifyContent="start" alignItems="center">
                 {!loading
                 ?
-                <Box>
-                    <IndicationsFilter
-                    setFilteredIndications={setFilteredIndications}
-                    indications={composedIndications}
-                    yearOptions={yearOptions}
-                    />
+                <Box maxW="100%" mt={16}>
                     <IndicationsList
-                    indications={filteredIndications}
+                    indications={sortIndicationsByDeviceName(filteredIndications)}
                     />
                 </Box>
                 :

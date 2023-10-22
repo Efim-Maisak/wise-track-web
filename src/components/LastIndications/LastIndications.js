@@ -19,7 +19,7 @@ import { Box,
 import supabaseService from "../../services/supabaseService";
 
 
-const LastIndications = ({selectedObjectId}) => {
+const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
 
     const { getLastIndication, getLastBillingPeriod } = supabaseService();
 
@@ -62,7 +62,7 @@ const LastIndications = ({selectedObjectId}) => {
 
     useEffect(() => {
         fetchLastIndication(selectedObjectId);
-    }, [selectedObjectId]);
+    }, [selectedObjectId, indicationsIsAdded]);
 
     return (
         <>

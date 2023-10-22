@@ -77,7 +77,8 @@ const supabaseService = () => {
         let { data: indications, error } = await supabase
         .from('indications')
         .select(`id, billing_period, value, monthly_change, created_at, device_id!inner(id, device_name, object, device_type_id(type_code, type_name, units))`)
-        .eq('device_id.object', objectId);
+        .eq('device_id.object', objectId)
+        .order('billing_period', { ascending: true });
 
         return {indications, error};
     };

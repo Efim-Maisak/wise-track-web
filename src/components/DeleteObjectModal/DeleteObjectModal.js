@@ -104,7 +104,7 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
             </ModalBody>
             <ModalFooter mt="4">
               <Button
-              colorScheme='blue'
+              colorScheme="teal"
               onClick={onClose}>
                 Закрыть
               </Button>

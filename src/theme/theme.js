@@ -15,6 +15,6 @@ export const customTheme = extendTheme({
           content: { width: "unset" },
         },
       },
-    }
+    },
   }
 })

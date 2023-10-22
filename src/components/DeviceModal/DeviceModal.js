@@ -97,7 +97,7 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
                 </ModalBody>
                 <ModalFooter>
                 <Button
-                colorScheme='blue'
+                colorScheme="teal"
                 onClick={() => {
                     onClose();
                     }}>

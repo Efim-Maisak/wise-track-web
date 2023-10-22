@@ -70,6 +70,7 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                     </Button>
                     { devices && devices.map( (device, index) => ((
                         <Box
+                        as="button"
                         key={device.id}
                         data-id={index}
                         flex="0 0 auto"
@@ -78,6 +79,9 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                         boxShadow="base"
                         borderRadius={8}
                         cursor="pointer"
+                        _active={{
+                            transform: "scale(0.98)",
+                        }}
                         onClick={handleOpenDeviceModal}
                         >
                             <Box w="120px" h="90px"></Box>
@@ -89,6 +93,7 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                                 textAlign="center"
                                 overflow="hidden"
                                 textOverflow="clip"
+                                color="gray.600"
                                 noOfLines={2}>
                                 {device.device_name}
                                 </Text>

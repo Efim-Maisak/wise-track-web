@@ -100,7 +100,14 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
             <ModalHeader>Добавить прибор учета</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-                <Select mt={4} maxW="320px"size="md" variant="outline" defaultValue={"default"} onChange={onChangeSеlectValue}>
+                <Select
+                mt={4}
+                maxW="320px"
+                size="md"
+                variant="outline"
+                focusBorderColor="teal.600"
+                defaultValue={"default"}
+                 onChange={onChangeSеlectValue}>
                     <option value="default" disabled>Выберите тип прибора</option>
                     {types && types.map(
                         tp => ((<option
@@ -113,7 +120,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
                 </Select>
                 <FormControl isInvalid={inputError}>
                     <FormLabel mt={4}>Название прибора</FormLabel>
-                    <Input type="text" value={deviceNameInput} onChange={handleDeviceInput}/>
+                    <Input type="text" focusBorderColor="teal.600" value={deviceNameInput} onChange={handleDeviceInput}/>
                     {!inputError ? (
                     <FormHelperText>
                     Введите условное название прибора учета
@@ -125,7 +132,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
             </ModalBody>
             <ModalFooter>
               <Button
-              colorScheme='blue'
+              colorScheme="teal"
               isDisabled={!deviceNameInput || !deviceTypeSelect}
               onClick={() => {
                 onClose();

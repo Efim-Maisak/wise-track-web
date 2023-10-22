@@ -81,7 +81,7 @@ import {
             <ModalBody>
             <FormControl isInvalid={inputError}>
               <FormLabel>Название объекта</FormLabel>
-              <Input type="text" value={objectInput} onChange={onObjectInputChange}/>
+              <Input type="text" value={objectInput} focusBorderColor="teal.600" onChange={onObjectInputChange}/>
               {!inputError ? (
                 <FormHelperText>
                   Введите условное название объекта. Например: "Квартира на ул. Садовой"
@@ -93,7 +93,7 @@ import {
             </ModalBody>
             <ModalFooter>
               <Button
-              colorScheme='blue'
+              colorScheme='teal'
               isDisabled={!objectInput}
               onClick={() => {
                 onClose();

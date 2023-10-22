@@ -10,53 +10,74 @@ import {
 import {Search2Icon} from "@chakra-ui/icons"
 
 
-const IndicationsFilter = ({setFilteredIndications, indications, yearOptions}) => {
+const IndicationsFilter = ({setFilteredIndications, indications, filteredIndications, yearOptions}) => {
 
     const [searchInput, setSearchInput] = useState("");
     const [yearSelect, setYearSelect] = useState("");
+    const [filteredByYear, setFilteredByYear] = useState(null);
 
 
-    const filterIndications = (indicationsArr) => {
+    const filterIndicationsBySeach = (indicationsArr, filteredArr) => {
 
+        if(yearSelect) {
+            if(filteredArr) {
+                if(searchInput.length === 0) {
+                    setFilteredIndications(filteredByYear);
+                } else {
+                    const result = filteredArr.filter(item => {
+                        if(Object.keys(item)[0].toLowerCase().includes(searchInput)) return item;
+                    });
+                    setFilteredIndications(result);
+                }
+            }
+        } else {
+            if(indicationsArr) {
+                if(searchInput.length === 0) {
+                    setFilteredIndications(indicationsArr);
+                } else {
+                    const result = indicationsArr.filter(item => {
+                        if(Object.keys(item)[0].toLowerCase().includes(searchInput)) return item;
+                    });
+                    setFilteredIndications(result);
+                };
+            }
+        }
+    }
+
+    const filterIndicationsByYear = (indicationsArr) => {
         if(indicationsArr) {
-            if(searchInput.length === 0) {
-                setFilteredIndications(indicationsArr);
-            } else {
-                const result = indicationsArr.filter(item => {
-                    if(Object.keys(item)[0].toLowerCase().includes(searchInput)) return item;
-                });
-                setFilteredIndications(result);
-            };
-
             if(yearSelect) {
                 const result = indicationsArr.filter(item => {
                     if(Object.keys(item)[0].toLowerCase().includes(yearSelect)) return item;
                 });
                 setFilteredIndications(result);
-                setSearchInput("");
+                setFilteredByYear(result);
+            } else {
+                setFilteredIndications(indicationsArr);
             }
         }
-    }
+    };
 
     const handleSearchInput = (e) => {
         setSearchInput(e.target.value);
     };
 
     const handleYearSelect = (e) => {
-        setYearSelect(e.target.value)
+        setYearSelect(e.target.value);
     }
 
     useEffect(() => {
-        filterIndications(indications);
+        filterIndicationsBySeach(indications, filteredIndications);
     }, [searchInput]);
 
     useEffect(() => {
-        filterIndications(indications);
+        filterIndicationsByYear(indications);
     }, [yearSelect]);
+
 
     return (
         <>
-            <Box as="section" w="620px" border="1px" borderColor="gray.200" borderRadius={8}>
+            <Box as="section" w="620px" boxShadow="base" borderRadius={8}>
                 <HStack p={4}>
                     <InputGroup>
                         <InputLeftElement pointerEvents='none'>
@@ -78,7 +99,7 @@ const IndicationsFilter = ({setFilteredIndications, indications, yearOptions}) =
                     maxW="220px"
                     size="md"
                     variant="outline"
-                    _focus={{borderColor: "teal"}}
+                    focusBorderColor="teal.600"
                     placeholder="За все годы"
                     value={yearSelect}
                     onChange={handleYearSelect}

@@ -3,7 +3,6 @@ import {
     Box,
     Flex,
     Heading,
-    Select,
     Menu,
     MenuList,
     MenuButton,
@@ -12,8 +11,10 @@ import {
     useDisclosure,
     Alert,
     AlertIcon,
-    Spinner
+    Spinner,
+    Select
     } from "@chakra-ui/react";
+
 
 import { FaBars } from "react-icons/fa6";
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
@@ -42,6 +43,7 @@ const Objects = () => {
     const [objectIsDeleted, setObjectIsDeteted] = useState(false);
     const [deviceIsAdded, setDeviceIsAdded] = useState(false);
     const [deviceIsDeleted, setDeviceIsDeleted] = useState(false);
+    const [indicationsIsAdded, setIndicationsIsAdded] = useState(false);
 
     const { isOpen: isOpenAddModal, onOpen: onOpenAddModal, onClose: onCloseAddModal } = useDisclosure();
     const { isOpen: isOpenDeleteModal, onOpen: onOpenDeleteModal, onClose: onCloseDeleteModal } = useDisclosure();
@@ -83,9 +85,9 @@ const Objects = () => {
     };
 
     useEffect(() => {
-        fetchUserDevices(objectIdToStorage);
         setSelectedObject(objectToStorage);
         fetchUserObjects();
+        fetchUserDevices(objectIdToStorage);
     }, [selectedObject]);
 
     useEffect(() => {
@@ -110,6 +112,8 @@ const Objects = () => {
             onOpenAddDeviceModal={onOpenAddDeviceModal}
             deviceIsDeleted={deviceIsDeleted}
             setDeviceIsDeleted={setDeviceIsDeleted}
+            indicationsIsAdded={indicationsIsAdded}
+            setIndicationsIsAdded={setIndicationsIsAdded}
             selectedObjectId={selectedObjectId}
             objects={objects}
             devices={devices}
@@ -148,67 +152,85 @@ const Objects = () => {
     );
 };
 
-const View = ({selectedObject, onChangeSеlectValue, onOpenAddModal, onOpenDeleteModal, onOpenAddDeviceModal, deviceIsDeleted, setDeviceIsDeleted, selectedObjectId, objects, devices}) => {
+const View = ({ selectedObject,
+                onChangeSеlectValue,
+                onOpenAddModal,
+                onOpenDeleteModal,
+                onOpenAddDeviceModal,
+                deviceIsDeleted,
+                setDeviceIsDeleted,
+                indicationsIsAdded,
+                setIndicationsIsAdded,
+                selectedObjectId,
+                objects,
+                devices}) => {
     return(
-        <>
-            {
-            objects.length === 0
-            ?
-            <Alert
-            w="620px"
-            mt={4}
-            status="info"
-            fontSize='sm'>
-            <AlertIcon />
-            Перед началом использования приложения добавьте объект недвижимости
-            </Alert>
-            :
-            null
-            }
-            <Box as="section" mt="4" p="4" w="620px" boxShadow="base" borderRadius="8px">
-                <Heading as="h3" size="md">Мои объекты</Heading>
-                <Flex justifyContent="space-between" mt="4">
-                    <Select maxW="480px"size="md" variant="flushed" value={selectedObject} onChange={onChangeSеlectValue}>
-                        {objects && objects.map(
-                            obj => ((<option
-                                        key={obj.id}
-                                        value={obj.object_name === selectedObject ? obj.object_name : null}
-                                        data-id={obj.id}
-                                        >
-                                        {obj.object_name}
-                                    </option>))
-                            )}
-                    </Select>
-                    <Menu>
-                    <MenuButton
-                        as={IconButton}
-                        aria-label='Options'
-                        icon={<FaBars/>}
-                        variant='outline'
+            <>
+                {
+                objects.length === 0
+                ?
+                <Alert
+                w="620px"
+                mt={4}
+                status="info"
+                fontSize='sm'>
+                <AlertIcon />
+                Перед началом использования приложения добавьте объект недвижимости
+                </Alert>
+                :
+                null
+                }
+                <Box as="section" mt="4" p="4" w="620px" boxShadow="base" borderRadius="8px">
+                    <Heading as="h3" size="md">Мои объекты</Heading>
+                    <Flex justifyContent="space-between" mt="4">
+                        <Select
+                        maxW="480px"
+                        size="md"
+                        variant="filled"
+                        focusBorderColor="teal.600"
+                        value={selectedObject || "Объекты отсутствуют"}
+                        onChange={onChangeSеlectValue}
+                        >
+                            {objects && objects.map(
+                                obj => ((<option
+                                            key={obj.id}
+                                            value={obj.object_name === selectedObject ? obj.object_name : null}
+                                            data-id={obj.id}
+                                            >
+                                            {obj.object_name}
+                                        </option>))
+                                )}
+                        </Select>
+                        <Menu>
+                        <MenuButton
+                            as={IconButton}
+                            aria-label='Options'
+                            icon={<FaBars/>}
+                            variant='outline'
+                        />
+                        <MenuList>
+                            <MenuItem icon={<AddIcon fontSize="16px"/>} onClick={onOpenAddModal}>
+                            Добавить
+                            </MenuItem>
+                            <MenuItem icon={<DeleteIcon fontSize="16px" color="red.500"/>} onClick={onOpenDeleteModal}>
+                            Удалить
+                            </MenuItem>
+                        </MenuList>
+                        </Menu>
+                    </Flex>
+                </Box>
+                <Box as="section" mt="4" p="4 0 4 4" w="620px" boxShadow="base" borderRadius="8px">
+                    <Devices
+                    onOpenAddDeviceModal={onOpenAddDeviceModal}
+                    deviceIsDeleted={deviceIsDeleted}
+                    setDeviceIsDeleted={setDeviceIsDeleted}
+                    devices={devices}
+                    objects={objects}
                     />
-                    <MenuList>
-                        <MenuItem icon={<AddIcon fontSize="16px"/>} onClick={onOpenAddModal}>
-                        Добавить
-                        </MenuItem>
-                        <MenuItem icon={<DeleteIcon fontSize="16px" color="red.500"/>} onClick={onOpenDeleteModal}>
-                        Удалить
-                        </MenuItem>
-                    </MenuList>
-                    </Menu>
-                </Flex>
-            </Box>
-            <Box as="section" mt="4" p="4 0 4 4" w="620px" boxShadow="base" borderRadius="8px">
-                <Devices
-                onOpenAddDeviceModal={onOpenAddDeviceModal}
-                deviceIsDeleted={deviceIsDeleted}
-                setDeviceIsDeleted={setDeviceIsDeleted}
-                devices={devices}
-                objects={objects}
-                />
-            </Box>
-            <LastIndications selectedObjectId={selectedObjectId}/>
-            <RecordReadings devices={devices}/>
-        </>
+                </Box>
+                <LastIndications selectedObjectId={selectedObjectId} indicationsIsAdded={indicationsIsAdded}/>
+                <RecordReadings devices={devices} indicationsIsAdded={indicationsIsAdded} setIndicationsIsAdded={setIndicationsIsAdded}/>
+            </>
     )
 }
 

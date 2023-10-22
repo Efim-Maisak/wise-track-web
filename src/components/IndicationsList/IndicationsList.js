@@ -33,9 +33,9 @@ const IndicationsList = ({indications}) => {
         <>
             {indications && indications.length === 0
             ?
-            <Text w="100%" mt={16} textAlign="center">Записи отсутствуют</Text>
+            <Text mt={16} textAlign="center">Записи отсутствуют</Text>
             :
-            <Box as="section" mt={8} w="620px" border="1px" borderColor="gray.200" borderRadius={8}>
+            <Box as="section" w="620px" boxShadow="base" borderRadius={8}>
                 <Stack
                 divider={<StackDivider borderColor="gray.200"/>}
                 spacing="0"
@@ -52,7 +52,7 @@ const IndicationsList = ({indications}) => {
                     onClick={handleOpenIndicationModal}
                     >
                         <Flex justifyContent="space-between" alignItems="center">
-                            <Text>{Object.keys(ind)[0]}</Text>
+                            <Text fontWeight="500" color="gray.600">{Object.keys(ind)[0]}</Text>
                             <Icon as={FaAngleRight}></Icon>
                         </Flex>
                     </Box>
