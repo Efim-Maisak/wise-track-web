@@ -16,28 +16,23 @@ import { Box,
         Td,
         TableContainer
         } from "@chakra-ui/react";
+import { formatDate } from "../../utils/formatDate";
 import supabaseService from "../../services/supabaseService";
 
 
 const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
+
+    const dateOptions = {
+        day: 'numeric',
+        month: "long",
+        year: "numeric"
+      };
 
     const { getLastIndication, getLastBillingPeriod } = supabaseService();
 
     const [lastIndications, setLastIndications] = useState([]);
     const [lastIndicationDate, setlastIndicationDate] = useState(null);
 
-
-    const formatDate = (dateString) => {
-        const options = {
-            day: 'numeric',
-            month: "long",
-            year: "numeric"
-          };
-
-        const timestamp = Date.parse(dateString);
-        const date = new Date(timestamp);
-        setlastIndicationDate(date.toLocaleString("ru", options));
-    };
 
     const fetchLastIndication = async (ObjectId) => {
         try {
@@ -48,7 +43,7 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
                 if(res.last_indication.length > 0) {
                     const lastPeriod = res.last_indication[0].billing_period;
                     const lastInd = await getLastIndication(ObjectId, lastPeriod);
-                    formatDate(res.last_indication[0].created_at);
+                    setlastIndicationDate(formatDate(res.last_indication[0].created_at, dateOptions));
                     setLastIndications(lastInd.indication);
                 } else {
                     setLastIndications([]);

@@ -38,7 +38,7 @@ const HistoryPage = () => {
         }
     }
 
-    const formatDate = (inputDate)  => {
+    const formatDates = (inputDate)  => {
         const [year, month] = inputDate.split("-");
 
         const monthsArr = [
@@ -55,7 +55,7 @@ const HistoryPage = () => {
         const groupedData = {};
 
         indicationsArr.forEach(item => {
-            const period = formatDate(item.billing_period);
+            const period = formatDates(item.billing_period);
 
             if (!groupedData[period]) {
             groupedData[period] = [];

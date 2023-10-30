@@ -107,6 +107,18 @@ import {
         return data;
     };
 
+    const sortInputsByDeviceName = (devicesArr) => {
+        if (devicesArr) {
+            devicesArr.sort((a, b) => {
+                if (a.device_name < b.device_name) return -1;
+                if (a.device_name > b.device_name) return 1;
+                return 0;
+            });
+        };
+    };
+
+    sortInputsByDeviceName(devices);
+
     const sendIndications = async () => {
         if(!globalInputError && !monthInputError) {
             try {

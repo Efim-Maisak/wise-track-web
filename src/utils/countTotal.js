@@ -1,10 +1,10 @@
-// функция для рачета суммы показаний счетчиков одного типа. Принимает в аргументы объект с показаниями и строку с типом счетчика
+// функция для раcчета суммы показаний счетчиков одного типа. Принимает в аргументы объект с показаниями и строку с типом счетчика
 
 export const countTotal = (data, deviceTypeCode) => {
     const dataArr = Object.values(data)[0];
 
     if(!dataArr.some((item) => item.device_id?.device_type_id?.type_code === deviceTypeCode)) {
-        return ["Н/Д", "Н/Д"];
+        return ["*", "*"];
     } else {
         const sumTotal = dataArr.filter(item => {
             if(item.device_id.device_type_id.type_code === deviceTypeCode) return item

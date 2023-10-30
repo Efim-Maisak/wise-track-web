@@ -1,6 +1,7 @@
 import React from "react";
 import {
     HStack,
+    Stack,
     Text,
     Badge,
     Modal,
@@ -21,29 +22,22 @@ import {
     TableContainer
   } from '@chakra-ui/react'
 import { countTotal } from "../../utils/countTotal";
+import { formatDate } from "../../utils/formatDate";
 
 
 const IndicationModal = ({isOpen, onClose, indication}) => {
 
-    const formatDate = (dateString) => {
-        const options = {
-            day: 'numeric',
-            month: "numeric",
-            year: "numeric"
-          };
-
-        const timestamp = Date.parse(dateString);
-        const date = new Date(timestamp);
-
-        return date.toLocaleString("ru", options);
-    };
+    const dateOptions = {
+        day: 'numeric',
+        month: "numeric",
+        year: "numeric"
+      };
 
 
     if(!indication) return null
 
     return (
         <>
-        {console.log(indication)}
          <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
@@ -52,31 +46,33 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
                 <ModalBody>
                     <Box p={4}>
                         <HStack justifyContent="space-between">
-                            <Box w="180px" h="180px" alignSelf="flex-start">
-                                <Text>Дата передачи показаний</Text>
-                                <Badge
-                                m={4}
-                                variant="solid"
-                                colorScheme="teal"
-                                fontSize="14px"
-                                >
-                                {formatDate(Object.values(indication)[0][0].created_at)}
-                                </Badge>
+                            <Box w="180px" h="180px" alignSelf="center">
+                                <Stack h="100%" justifyContent="center" alignItems="center">
+                                    <Text fontWeight="600" textAlign="center">Дата передачи показаний:</Text>
+                                    <Badge
+                                    variant="solid"
+                                    colorScheme="teal"
+                                    fontSize="16px"
+                                    >
+                                    {formatDate(Object.values(indication)[0][0].created_at, dateOptions)}
+                                    </Badge>
+                                </Stack>
+
                             </Box>
                             <Box p={4} w="180px" h="180px" boxShadow="base" borderRadius={8}>
-                                <Text mt={2} textAlign="center">Холодная вода (всего):</Text>
+                                <Text mt={4} fontWeight="600" textAlign="center">Холодная вода (всего):</Text>
                                 <HStack mt={2} justifyContent="center">
-                                    <Text fontSize="36px" fontWeight="800" color="gray.600">{countTotal(indication, "CW")[0]}</Text>
-                                    <Text fontSize="36px" fontWeight="800" color="gray.600">/</Text>
-                                    <Text fontSize="24px" fontWeight="800" color="gray.400">{countTotal(indication, "CW")[1]}</Text>
+                                    <Text fontSize="32px" fontWeight="800" color="gray.600">{countTotal(indication, "CW")[0]}</Text>
+                                    <Text fontSize="28px" fontWeight="600" color="gray.600">/</Text>
+                                    <Text fontSize="26px" fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "CW")[1]}</Text>
                                 </HStack>
                             </Box>
                             <Box p={4} w="180px" h="180px" boxShadow="base" borderRadius={8}>
-                                <Text mt={2} textAlign="center">Горячая вода (всего):</Text>
+                                <Text mt={4} fontWeight="600" textAlign="center">Горячая вода (всего):</Text>
                                 <HStack mt={2} justifyContent="center">
-                                    <Text fontSize="36px" fontWeight="800" color="gray.600">{countTotal(indication, "HW")[0]}</Text>
-                                    <Text fontSize="36px" fontWeight="800" color="gray.600">/</Text>
-                                    <Text fontSize="24px" fontWeight="800" color="gray.400">{countTotal(indication, "HW")[1]}</Text>
+                                    <Text fontSize="32px" fontWeight="800" color="gray.600">{countTotal(indication, "HW")[0]}</Text>
+                                    <Text fontSize="28px" fontWeight="600" color="gray.600">/</Text>
+                                    <Text fontSize="26px" fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "HW")[1]}</Text>
                                 </HStack>
                             </Box>
                         </HStack>
