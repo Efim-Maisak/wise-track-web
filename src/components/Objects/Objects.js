@@ -14,8 +14,6 @@ import {
     Spinner,
     Select
     } from "@chakra-ui/react";
-
-
 import { FaBars } from "react-icons/fa6";
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import Devices from "../Devices/Devices";
@@ -24,9 +22,10 @@ import AddObjectModal from "../AddObjectModal/AddObjectModal";
 import DeleteObjectModal from "../DeleteObjectModal/DeleteObjectModal";
 import AddDeviceModal from "../AddDeviceModal/AddDeviceModal";
 import LastIndications from "../LastIndications/LastIndications";
+import { sortDevicesByName } from "../../utils/sortDevicesByName";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 import supabaseService from "../../services/supabaseService";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 
 
@@ -64,7 +63,7 @@ const Objects = () => {
         try {
             const res = await getDevices(objectId);
             if (res.devices) {
-                setDevices(res.devices);
+                setDevices(sortDevicesByName(res.devices));
             }
             if(res.error) {
                 throw new Error(res.error.message);
@@ -201,14 +200,14 @@ const View = ({ selectedObject,
                                         </option>))
                                 )}
                         </Select>
-                        <Menu>
+                        <Menu placement="bottom-end">
                         <MenuButton
                             as={IconButton}
                             aria-label='Options'
                             icon={<FaBars/>}
                             variant='outline'
                         />
-                        <MenuList>
+                        <MenuList minW="0">
                             <MenuItem icon={<AddIcon fontSize="16px"/>} onClick={onOpenAddModal}>
                             Добавить
                             </MenuItem>

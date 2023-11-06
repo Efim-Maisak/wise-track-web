@@ -1,29 +1,36 @@
 import React from "react";
 import { Box, Heading, Text, Flex, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
+
+    const navigate = useNavigate();
+
     return (
         <Box w="100%">
-            <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
+            <Flex h="80vh" flexDirection="row" justifyContent="center" alignContent="center">
                 <Heading
                 as="h2"
-                display="inline-block"
-                size="2xl"
+                pr={8}
+                size="4xl"
                 bgGradient="linear(to-r, teal.400, teal.600)"
                 backgroundClip="text"
-                textAlign="center">
+                alignSelf="center">
                     404
                 </Heading>
-                <Text mt={4} fontSize="20px" color="#494d4e">Страница не найдена</Text>
-                <Button
-                mt={4}
-                colorScheme="teal"
-                bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
-                color="white"
-                variant="solid"
-                >
-                На главную
-                </Button>
+                <Flex flexDirection="column" justifyContent="center" alignItems="center">
+                    <Text fontSize="18px" fontWeight="600" color="gray.500">Страница не найдена</Text>
+                    <Button
+                    mt={4}
+                    colorScheme="teal"
+                    bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+                    color="white"
+                    variant="solid"
+                    onClick={() => navigate("/")}
+                    >
+                    На главную
+                    </Button>
+                </Flex>
             </Flex>
         </Box>
     )

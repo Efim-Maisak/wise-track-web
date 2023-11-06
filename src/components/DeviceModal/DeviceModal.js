@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -16,9 +15,10 @@ import {
     MenuList,
     MenuItem,
     IconButton,
-    useToast
+    Image,
+    useToast,
+    Stack
   } from '@chakra-ui/react';
-
   import { BsThreeDotsVertical } from "react-icons/bs";
   import { DeleteIcon } from '@chakra-ui/icons';
   import supabaseService from "../../services/supabaseService";
@@ -26,8 +26,20 @@ import {
 
 const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, device}) => {
 
-    const { deleteDevice } = supabaseService();
+    const { deleteDevice, getLastIndicationFromDevice } = supabaseService();
     const toast = useToast();
+
+    const [deviceLastValue, setDeviceLastValue] = useState("");
+
+
+    const fetchDeviceLastIndication = async (deviceId) => {
+        try {
+            const res = await getLastIndicationFromDevice(deviceId);
+            setDeviceLastValue(res.indication[0].value);
+        }catch(e) {
+            throw new Error(e.message);
+        }
+    };
 
     const deleteUserDevice = async (deviceId) => {
         try {
@@ -61,12 +73,18 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
         onClose();
     }
 
+    useEffect(() => {
+        if(device && device.hasOwnProperty("id")) {
+            fetchDeviceLastIndication(device.id);
+        }
+    }, [device]);
+
 
     if (!device) return null
 
     return (
         <>
-        <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
@@ -88,14 +106,19 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
                     </Flex>
                 </ModalHeader>
                 <ModalBody>
-                    <Box p={4}>
-                        <ul>
-                            <li>{device.device_type_id.type_name}</li>
-                            <li>{device.device_type_id.units}</li>
-                        </ul>
-                    </Box>
+                    <Flex justifyContent="space-around">
+                        <Image boxSize="220px"src={device.device_type_id.image_url} alt="meter-device"/>
+                        <Box p={4}>
+                            <Stack spacing={2}>
+                                <Text as="h6" fontWeight="500" color="gray.700">Прибор измерения:</Text>
+                                <Text color="gray.700">{device.device_type_id.type_name}</Text>
+                                <Text as="h6" fontWeight="500" color="gray.700">Текущие показания:</Text>
+                                <Text color="gray.700">{deviceLastValue} {device.device_type_id.units}</Text>
+                            </Stack>
+                        </Box>
+                    </Flex>
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter pt={8}>
                 <Button
                 colorScheme="teal"
                 onClick={() => {

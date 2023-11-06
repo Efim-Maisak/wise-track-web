@@ -39,7 +39,7 @@ const supabaseService = () => {
     const getDevices = async (objectId) => {
         let { data: devices, error } = await supabase
         .from('devices')
-        .select('id, device_name, object, device_type_id(id, type_name, type_code, units)')
+        .select('id, device_name, object, device_type_id(id, type_name, type_code, units, image_url)')
         .eq('object', objectId );
 
         return { devices, error };
@@ -103,6 +103,17 @@ const supabaseService = () => {
         return {indication, error};
     };
 
+    const getLastIndicationFromDevice = async (deviceId) => {
+        let { data: indication, error } = await supabase
+        .from('indications')
+        .select(`id, billing_period, value, monthly_change, created_at, device_id!inner(id, device_name, object)`)
+        .eq('device_id.id', deviceId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+        return {indication, error};
+    };
+
 
     return {
         getDevicesTypes,
@@ -115,7 +126,8 @@ const supabaseService = () => {
         postIndications,
         getIndications,
         getLastBillingPeriod,
-        getLastIndication
+        getLastIndication,
+        getLastIndicationFromDevice
     };
 };
 

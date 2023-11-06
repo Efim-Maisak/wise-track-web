@@ -1,6 +1,19 @@
 import React, {useState, useEffect} from "react";
-import { Container, Flex, Box } from "@chakra-ui/react";
+import { Container,
+        Flex,
+        Box,
+        Text,
+        Menu,
+        MenuButton,
+        Button,
+        MenuList,
+        MenuItem,
+        Spinner
+        } from "@chakra-ui/react";
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import BarChart from "../BarChart/BarChart";
+import { sortDevicesByName } from "../../utils/sortDevicesByName";
+import { sortNumbers } from "../../utils/sortNumbers";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import supabaseService from "../../services/supabaseService";
 
@@ -10,20 +23,39 @@ const StatPage = () => {
     const [ objectIdFromStorage, setObjectIdFromStorage ] = useLocalStorage("", "selectedObjectId");
 
     const [objectId, setObjectId] = useState(objectIdFromStorage);
+    const [loading, setLoading] = useState(true);
     const [devices, setDevices] = useState([]);
     const [indications, setIndications] = useState([]);
+    const [filteredIndications, setFilteredIndications] = useState([]);
+    const [yearOptions, setYearOptions] = useState([]);
     const [charts, setCharts] = useState([]);
+    const [selectedYear, setSelectedYear] = useState("");
 
     const { getDevices, getIndications } = supabaseService();
+
+
+    const createYearOptions = (indicationsArr) => {
+        let yearArr = [];
+
+        if(indicationsArr) {
+            indicationsArr.forEach( elem => {
+                yearArr.push(Object.keys(elem)[0].slice(-4));
+            });
+        }
+        setYearOptions(sortNumbers([...new Set(yearArr)]));
+        setSelectedYear(sortNumbers([...new Set(yearArr)])[0]);
+    };
 
     const fetchIndications = async () => {
         try {
             const res = await getIndications(objectId);
             if(res.indications) {
                 setIndications(composeIndicationsData(res.indications));
+                createYearOptions(composeIndicationsData(res.indications));
             }
         }catch(e){
             throw new Error(e.message);
+
         }
     };
 
@@ -37,17 +69,6 @@ const StatPage = () => {
             throw new Error(e.message);
         }
     }
-
-    const sortDevicesByName = (devicesArr) => {
-        if (devicesArr) {
-            devicesArr.sort((a, b) => {
-                if (a.device_name < b.device_name) return -1;
-                if (a.device_name > b.device_name) return 1;
-                return 0;
-            });
-            return devicesArr;
-        };
-    };
 
     const formatDates = (inputDate)  => {
         const [year, month] = inputDate.split("-");
@@ -74,7 +95,7 @@ const StatPage = () => {
 
             groupedData[period].push(item);
         });
-        console.log(groupedData);
+
         return Object.entries(groupedData).map(([period, group]) => ({
             [period]: group
         }));
@@ -97,6 +118,12 @@ const StatPage = () => {
                         return item.device_id.device_name === deviceName;
                     }).map(item => item.monthly_change);
                 });
+
+                    valuesArr.forEach(elem => {
+                        if(elem.length === 0) {
+                            elem.push(0);
+                        }
+                    });
 
                 chartsArr.push({
                     labels: labelsArr,
@@ -123,28 +150,95 @@ const StatPage = () => {
         }
     }
 
+    const handleSelectYear = (e) => {
+        setSelectedYear(e.target.value);
+    };
+
+    const filterIndicationsByYear = (indicationsArr) => {
+        if(indicationsArr) {
+            if(selectedYear) {
+                const result = indicationsArr.filter(item => {
+                    if(Object.keys(item)[0].toLowerCase().includes(selectedYear)) return item;
+                });
+                setFilteredIndications(result);
+            } else {
+                setFilteredIndications(indicationsArr);
+            }
+        }
+    };
+
     useEffect(() => {
-        fetchDevices();
-        fetchIndications();
+        const fetchData = async () => {
+            try {
+                await fetchDevices();
+                await fetchIndications();
+            } catch (e) {
+                throw new Error(e.message);
+            }
+            setLoading(false);
+        };
+        fetchData();
     }, []);
 
     useEffect(() => {
-        createChartsBundle(devices, indications);
-    }, [devices, indications]);
+        filterIndicationsByYear(indications);
+    }, [ indications, selectedYear]);
 
+    useEffect(() => {
+        if(devices.length > 0 && indications.length > 0) {
+            createChartsBundle(devices, filteredIndications);
+        }
+    }, [indications, selectedYear, devices, filteredIndications]);
 
     return (
         <>
-        {console.log(indications)}
-        {console.log(devices)}
-        {console.log(charts)}
-        <Container maxW='4xl' as="div" p="0">
-            <Flex justifyContent="center">
-                <Box as="section" mt="4" w="620px">
-                    <BarChart chartData={charts}/>
+            <Container as="div" maxW='4xl' p="0">
+                <Box
+                 w="620px"
+                 pt={16} margin="auto"
+                 display={indications.length === 0 ? "none" : "block"}
+                 >
+                    <Flex justifyContent="flex-end">
+                        <Menu placement="bottom-end">
+                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                            {selectedYear}
+                        </MenuButton>
+                        <MenuList minW="0">
+                            {yearOptions.map((year, i) => ((
+                            <MenuItem w="90px" key={i} value={year} onClick={handleSelectYear}>{year}</MenuItem>
+                            )))}
+                        </MenuList>
+                        </Menu>
+                    </Flex>
                 </Box>
-            </Flex>
-        </Container>
+                {loading
+                ?
+                <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
+                    <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="teal.500"
+                    size="xl"
+                    />
+                </Flex>
+                :
+                <>
+                    {indications.length === 0
+                    ?
+                    <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
+                        <Text fontWeight="500" color="gray.600" textAlign="center">Данные для отображения отсутствуют</Text>
+                    </Flex>
+                    :
+                    <Flex justifyContent="center">
+                        <Box as="section" mt={8} w="620px">
+                            <BarChart chartData={charts} devices={devices}/>
+                        </Box>
+                    </Flex>
+                    }
+                </>
+                }
+            </Container>
         </>
     );
 };

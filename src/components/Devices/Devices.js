@@ -1,7 +1,8 @@
 import React, {useState} from "react"
-import { Box, Button, Heading, Flex, Text, useDisclosure} from "@chakra-ui/react";
+import { Box, Button, Heading, Flex, Text, Image, useDisclosure} from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import DeviceModal from "../DeviceModal/DeviceModal";
+
 
 const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDeviceIsDeleted}) => {
 
@@ -27,6 +28,7 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                 <Heading p="4" as="h3" size="md">Мои приборы учета</Heading>
                 <Flex
                 w="100%"
+                h="190px"
                 p="4"
                 gap="2"
                 flexWrap="nowrap"
@@ -84,8 +86,16 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                         }}
                         onClick={handleOpenDeviceModal}
                         >
-                            <Box w="120px" h="90px"></Box>
-                            <Box w="120px" h="30px" pr="2" pl="2">
+                            <Box w="120px" h="120px">
+                            <Image
+                                padding="2px"
+                                boxSize="120px"
+                                objectFit="cover"
+                                src={device.device_type_id.image_url}
+                                alt="electric-meter-device"
+                            />
+                            </Box>
+                            <Box pt="6px" w="120px" h="30px" pr="2" pl="2">
                                 <Text
                                 fontWeight="bold"
                                 fontSize="14px"

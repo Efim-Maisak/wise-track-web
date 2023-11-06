@@ -1,51 +1,24 @@
 import React from "react";
-import { Flex, Heading, Spacer, HStack, Text, Button, IconButton, Tooltip } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Flex, Heading, Spacer, HStack, Text, Button } from "@chakra-ui/react";
 import { ImStatsBars, ImBook, ImHome3 } from "react-icons/im";
+import NavigationLink from "../NavigationLink/NavigationLink";
 
 
 const Header = () => {
+
     return (
         <Flex p="20px" justifyContent="space-around" alignItems="center">
             <Heading as="h1" size="lg" color="#494d4e">WiseTrack</Heading>
             <Spacer/>
             <HStack as="nav" spacing="50px">
                 <HStack w="40px">
-                    <NavLink to="/">
-                        <Tooltip bg="teal" closeDelay={200} label="Главная">
-                            <IconButton
-                            variant="outline"
-                            colorScheme="teal"
-                            aria-label="Главная страница"
-                            icon={<ImHome3/>}
-                            isActive
-                            />
-                        </Tooltip>
-                    </NavLink>
+                    <NavigationLink to="/" label="Главная" icon={<ImHome3/>} arialabel="Главная страница"/>
                 </HStack>
                 <HStack w="40px">
-                    <NavLink to="history">
-                        <Tooltip bg="teal" closeDelay={200} label="История">
-                            <IconButton
-                            variant="outline"
-                            colorScheme="teal"
-                            aria-label="История показаний"
-                            icon={<ImBook/>}
-                            />
-                        </Tooltip>
-                    </NavLink>
+                    <NavigationLink to="history" label="История" icon={<ImBook/>} arialabel="История показаний"/>
                 </HStack>
                 <HStack w="40px">
-                    <NavLink to="statistics">
-                        <Tooltip bg="teal" closeDelay={200} label="Статистика">
-                            <IconButton
-                            variant="outline"
-                            colorScheme="teal"
-                            aria-label="Статистика"
-                            icon={<ImStatsBars/>}
-                            />
-                        </Tooltip>
-                    </NavLink>
+                    <NavigationLink to="statistics" label="Статистика" icon={<ImStatsBars/>} arialabel="Статистика"/>
                 </HStack>
             </HStack>
             <Spacer/>

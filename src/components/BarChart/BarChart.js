@@ -6,7 +6,7 @@ import { Box, Text } from "@chakra-ui/react";
 ChartJS.register(CategoryScale, LinearScale, BarController, BarElement, Tooltip, Legend );
 
 
-const BarChart = ({chartData}) => {
+const BarChart = ({chartData, devices}) => {
 
     const barOptions = {
         scales: {
@@ -33,9 +33,19 @@ const BarChart = ({chartData}) => {
         <Box p={4}>
             {chartData.map((item, index) => {
                 return (
-                    <Box key={index}>
-                        <Text color="gray.600" fontWeight="500" textAlign="center"> {item.datasets[0].label}, за месяц</Text>
-                        <Bar w="600" h="400" data={item} options={barOptions}/>
+                    <Box pb={4} key={index}>
+                        <Text
+                        color="gray.600"
+                        fontWeight="500"
+                        textAlign="center"
+                        >
+                        {item.datasets[0].label}, {devices[index].device_type_id.units}, за месяц
+                        </Text>
+                        <Bar
+                        w="600"
+                        h="400"
+                        data={item}
+                        options={barOptions}/>
                     </Box>
                 );
             })}

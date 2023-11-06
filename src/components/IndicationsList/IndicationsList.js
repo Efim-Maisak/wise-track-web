@@ -33,7 +33,7 @@ const IndicationsList = ({indications}) => {
         <>
             {indications && indications.length === 0
             ?
-            <Text mt={16} textAlign="center">Записи отсутствуют</Text>
+            <Text mt={16} fontWeight="500" color="gray.600" textAlign="center">Записи отсутствуют</Text>
             :
             <Box as="section" w="620px" boxShadow="base" borderRadius={8}>
                 <Stack
