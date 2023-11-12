@@ -1,10 +1,16 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from './components/Header/Header';
+import RootLayout from "./components/RootLayout/RootLayout";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { AuthProvider } from "./hooks/useAuth";
+//import Header from './components/Header/Header';
 import MainPage from "./components/Pages/MainPage";
 import HistoryPage from "./components/Pages/HistoryPage";
 import StatPage from "./components/Pages/StatPage";
 import RegistrationPage from "./components/Pages/RegistrationPage";
+import LoginPage from "./components/Pages/LoginPage";
+import PasswordRecoveryPage from "./components/Pages/PasswordRecoveryPage";
+import ChangePasswordPage from "./components/Pages/ChangePasswordPage";
 import NotFoundPage from "./components/Pages/NotFoundPage";
 
 
@@ -12,14 +18,20 @@ function App() {
 
   return (
     <div className="App" >
-      <Header h="40px"/>
-      <Routes>
-        <Route path="/" element={<MainPage/>}/>
-        <Route path="/history" element={<HistoryPage/>}/>
-        <Route path="/statistics" element={<StatPage/>}/>
-        <Route path="/registration" element={<RegistrationPage/>}/>
-        <Route path="*" element={<NotFoundPage/>}/>
-      </Routes>
+      <AuthProvider>
+        <RootLayout>
+          <Routes>
+            <Route path="/" element={<ProtectedRoute><MainPage/></ProtectedRoute>}/>
+            <Route path="/history" element={<ProtectedRoute><HistoryPage/></ProtectedRoute>}/>
+            <Route path="/statistics" element={<ProtectedRoute><StatPage/></ProtectedRoute>}/>
+            <Route path="/registration" element={<RegistrationPage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/recovery" element={<PasswordRecoveryPage/>}/>
+            <Route path="/change-pass" element={<ChangePasswordPage/>}/>
+            <Route path="*" element={<NotFoundPage/>}/>
+          </Routes>
+        </RootLayout>
+      </AuthProvider>
     </div>
   );
 }

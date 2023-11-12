@@ -11,18 +11,18 @@ import {
     Button,
     Heading,
     Text,
-    Link as ChackraLink,
     Divider,
     AbsoluteCenter,
+    Link as ChackraLink,
     useToast
   } from "@chakra-ui/react"
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { FcGoogle } from "react-icons/fc";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import supabase from "../../config/supabaseClient";
 
 
-const RegistrationPage = () => {
+const LoginPage = () => {
 
     const toast = useToast();
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ const RegistrationPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [emailInput, setEmailInput] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
 
     const handleEmailInput = (e) => {
         setEmailInput(e.target.value);
@@ -40,10 +40,10 @@ const RegistrationPage = () => {
         setPasswordInput(e.target.value);
     }
 
-    const handleSignUp = async () => {
+    const handleLogIn = async () => {
         setLoading(true);
         try {
-            const { error } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signInWithPassword({
                 email: emailInput,
                 password: passwordInput,
               });
@@ -64,7 +64,7 @@ const RegistrationPage = () => {
             setLoading(false);
             throw new Error(e.message);
         }
-    };
+    }
 
     return (
         <>
@@ -79,7 +79,7 @@ const RegistrationPage = () => {
                     <Stack spacing={8} mx={'auto'} w={'md'} py={12} px={6}>
                         <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'}>
-                            Регистрация
+                            Вход
                         </Heading>
                         </Stack>
                         <Box
@@ -138,14 +138,14 @@ const RegistrationPage = () => {
                                 _hover={{
                                 bg: 'blue.500',
                                 }}
-                                onClick={handleSignUp}
+                                onClick={handleLogIn}
                                 >
-                                Регистрация
+                                Войти
                             </Button>
                             </Stack>
                             <Stack pt={6}>
                             <Text align={'center'}>
-                                Уже зарегистрированы? <ChackraLink as={ReactRouterLink} color={'blue.400'} to="/login">Войти</ChackraLink>
+                                Забыли пароль? <ChackraLink as={ReactRouterLink} color={'blue.400'} to="/recovery">Восстановить</ChackraLink>
                             </Text>
                             </Stack>
                         </Stack>
@@ -157,4 +157,4 @@ const RegistrationPage = () => {
     );
 };
 
-export default RegistrationPage;
+export default LoginPage;
