@@ -13,6 +13,8 @@ const Header = () => {
 
     const handleLogOut = () => {
         signOut();
+        localStorage.removeItem("selectedObject");
+        localStorage.removeItem("selectedObjectId");
         navigate("/login");
     };
 
@@ -34,7 +36,7 @@ const Header = () => {
                 </HStack>
                 <Spacer/>
                 <HStack spacing="20px">
-                    <Text>{user?.email || ""}</Text>
+                    <Text color="gray.700" fontWeight="500">{user?.email || ""}</Text>
                     <Button
                     colorScheme="teal"
                     onClick={handleLogOut}

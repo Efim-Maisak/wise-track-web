@@ -75,7 +75,7 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
                 }
                 }}
             >
-            {!objects ? <Text textAlign="center">Объекты отсутствуют</Text> : null }
+            {objects && objects.length === 0 ? <Text textAlign="center" color="gray.600" fontWeight="500" py={16}>Объекты отсутствуют</Text> : null }
             {objects && objects.map(obj => ((
                 <Box key={obj.id} w="100%" mt="4" p="2" boxShadow="base" borderRadius={6}>
                     <Flex justifyContent="space-between" alignItems="center">

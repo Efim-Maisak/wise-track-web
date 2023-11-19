@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext, createContext} from "react";
-//import { Session, User } from "@supabase/supabase-js";
 import supabase from "../config/supabaseClient";
 
 

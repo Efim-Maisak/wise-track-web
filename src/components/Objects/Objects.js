@@ -12,6 +12,7 @@ import {
     Alert,
     AlertIcon,
     Spinner,
+    Tooltip,
     Select
     } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa6";
@@ -24,16 +25,20 @@ import AddDeviceModal from "../AddDeviceModal/AddDeviceModal";
 import LastIndications from "../LastIndications/LastIndications";
 import { sortDevicesByName } from "../../utils/sortDevicesByName";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-
+import { useAuth } from "../../hooks/useAuth";
 import supabaseService from "../../services/supabaseService";
-
 
 
 const Objects = () => {
 
+    const { user } = useAuth();
+    const {getObjects, getDevices} = supabaseService();
+
     const [ objectToStorage, setObjectToStorage ] = useLocalStorage("", "selectedObject");
     const [ objectIdToStorage, setObjectIdToStorage ] = useLocalStorage("", "selectedObjectId");
 
+    const [lastloginedUser, setLastLoginedUser] = useState(user.id);
+    const [objectsLoading, setObjectsLoading] = useState(false);
     const [selectedObjectId, setSelectedObjectId] = useState(objectIdToStorage);
     const [selectedObject, setSelectedObject] = useState(objectToStorage);
     const [objects, setObjects] = useState(null);
@@ -48,28 +53,31 @@ const Objects = () => {
     const { isOpen: isOpenDeleteModal, onOpen: onOpenDeleteModal, onClose: onCloseDeleteModal } = useDisclosure();
     const { isOpen: isOpenAddDeviceModal, onOpen: onOpenAddDeviceModal, onClose: onCloseAddDeviceModal } = useDisclosure();
 
-    const {getObjects, getDevices} = supabaseService();
 
     const fetchUserObjects = async () => {
         try {
-            await getObjects("c8ab3e1f-9ee1-43fc-9db0-0cf77878e5f8") // временное решение
+            setObjectsLoading(true);
+            await getObjects(user.id)
             .then( res => setObjects(res.objects));
+            setObjectsLoading(false);
         } catch(e) {
             throw new Error(e.message);
         }
     }
 
     const fetchUserDevices = async (objectId) => {
-        try {
-            const res = await getDevices(objectId);
-            if (res.devices) {
-                setDevices(sortDevicesByName(res.devices));
+        if(objectId) {
+            try {
+                const res = await getDevices(objectId);
+                if (res.devices) {
+                    setDevices(sortDevicesByName(res.devices));
+                }
+                if(res.error) {
+                    throw new Error(res.error.message);
+                }
+            } catch(e) {
+                throw new Error(e.message);
             }
-            if(res.error) {
-                throw new Error(res.error.message);
-            }
-        } catch(e) {
-            throw new Error(e.message);
         }
     };
 
@@ -84,8 +92,22 @@ const Objects = () => {
     };
 
     useEffect(() => {
+        if(user.id !== lastloginedUser) {
+            setSelectedObjectId(null);
+            setSelectedObject(null);
+            setObjects(null);
+            setDevices(null);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if(!objects) {
+            fetchUserObjects();
+        }
+    }, []);
+
+    useEffect(() => {
         setSelectedObject(objectToStorage);
-        fetchUserObjects();
         fetchUserDevices(objectIdToStorage);
     }, [selectedObject]);
 
@@ -101,7 +123,7 @@ const Objects = () => {
     return (
         <>
             {
-            objects && devices
+            !objectsLoading
             ?
             <View
             selectedObject={selectedObject}
@@ -146,6 +168,7 @@ const Objects = () => {
             isOpen={isOpenAddDeviceModal}
             onClose={onCloseAddDeviceModal}
             selectedObjectId={selectedObjectId}
+            selectedObject={selectedObject}
             />
         </>
     );
@@ -166,13 +189,15 @@ const View = ({ selectedObject,
     return(
             <>
                 {
-                objects.length === 0
+                !objects || objects.length === 0
                 ?
                 <Alert
                 w="620px"
                 mt={4}
                 status="info"
-                fontSize='sm'>
+                fontSize='sm'
+                borderRadius={8}
+                >
                 <AlertIcon />
                 Перед началом использования приложения добавьте объект недвижимости
                 </Alert>
@@ -182,24 +207,27 @@ const View = ({ selectedObject,
                 <Box as="section" mt="4" p="4" w="620px" boxShadow="base" borderRadius="8px">
                     <Heading as="h3" size="md">Мои объекты</Heading>
                     <Flex justifyContent="space-between" mt="4">
-                        <Select
-                        maxW="480px"
-                        size="md"
-                        variant="filled"
-                        focusBorderColor="teal.600"
-                        value={selectedObject || "Объекты отсутствуют"}
-                        onChange={onChangeSеlectValue}
-                        >
-                            {objects && objects.map(
-                                obj => ((<option
-                                            key={obj.id}
-                                            value={obj.object_name === selectedObject ? obj.object_name : null}
-                                            data-id={obj.id}
-                                            >
-                                            {obj.object_name}
-                                        </option>))
-                                )}
-                        </Select>
+                        <Tooltip bg="white" color="gray.600" label="Выбранный объект" openDelay="600">
+                            <Select
+                                maxW="480px"
+                                size="md"
+                                variant="filled"
+                                focusBorderColor="teal.600"
+                                isDisabled={objects && objects.length > 0 ? false : true}
+                                value={selectedObject || ""}
+                                onChange={onChangeSеlectValue}
+                                >
+                                    {objects && objects.map(
+                                        obj => ((<option
+                                                    key={obj.id}
+                                                    value={obj.object_name === selectedObject ? obj.object_name : null}
+                                                    data-id={obj.id}
+                                                    >
+                                                    {obj.object_name}
+                                                </option>))
+                                        )}
+                                </Select>
+                        </Tooltip>
                         <Menu placement="bottom-end">
                         <MenuButton
                             as={IconButton}

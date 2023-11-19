@@ -17,7 +17,7 @@ const RecordReadings = ({devices, indicationsIsAdded, setIndicationsIsAdded}) =>
                 w="100%"
                 size="md"
                 colorScheme='teal'
-                display={devices.length === 0 ? "none" : "block"}
+                display={!devices || devices.length === 0 ? "none" : "block"}
                 onClick={onOpenRecordReadingsModal}>
                     <HStack justify="center">
                         <ImMeter fontSize={'20px'}/>

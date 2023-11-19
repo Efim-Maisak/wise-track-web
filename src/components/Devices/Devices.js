@@ -1,5 +1,13 @@
 import React, {useState} from "react"
-import { Box, Button, Heading, Flex, Text, Image, useDisclosure} from "@chakra-ui/react";
+import { Box,
+        Button,
+        Heading,
+        Flex,
+        Text,
+        Image,
+        Tooltip,
+        useDisclosure
+        } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import DeviceModal from "../DeviceModal/DeviceModal";
 
@@ -48,28 +56,31 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
                     }
                     }}
                 >
-                    <Button
-                    as="button"
-                    flex="0 0 auto"
-                    width="120px"
-                    height="120px"
-                    transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-                    border="2px solid #a9a9a9"
-                    borderRadius={8}
-                    px="8px"
-                    fontSize="14px"
-                    bg="#f5f6f7"
-                    color="#4b4f56"
-                    _hover={{ bg: "#ebedf0" }}
-                    _active={{
-                        bg: '#dddfe2',
-                        transform: "scale(0.98)",
-                    }}
-                    isDisabled={objects && objects.length === 0}
-                    onClick={onOpenAddDeviceModal}
-                    >
-                    <AddIcon boxSize={8} color="#a9a9a9"/>
-                    </Button>
+                    <Tooltip bg="white.500" color="gray.600" label="Добавить прибор" openDelay="500">
+                        <Button
+                        as="button"
+                        flex="0 0 auto"
+                        width="120px"
+                        height="120px"
+                        transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                        border="2px solid #a9a9a9"
+                        borderRadius={8}
+                        px="8px"
+                        fontSize="14px"
+                        bg="#f5f6f7"
+                        color="#4b4f56"
+                        _hover={{ bg: "#ebedf0" }}
+                        _active={{
+                            bg: '#dddfe2',
+                            transform: "scale(0.98)",
+                        }}
+                        isDisabled={objects && objects.length === 0}
+                        onClick={onOpenAddDeviceModal}
+                        >
+                        <AddIcon boxSize={8} color="#a9a9a9"/>
+                        </Button>
+                    </Tooltip>
+
                     { devices && devices.map( (device, index) => ((
                         <Box
                         as="button"

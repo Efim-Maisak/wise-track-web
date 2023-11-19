@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Flex,
     Box,
@@ -20,10 +20,12 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { FcGoogle } from "react-icons/fc";
 import supabase from "../../config/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
 
 
 const RegistrationPage = () => {
 
+    const { session } = useAuth();
     const toast = useToast();
     const navigate = useNavigate();
 
@@ -65,6 +67,18 @@ const RegistrationPage = () => {
             throw new Error(e.message);
         }
     };
+
+    useEffect(() => {
+        if(session) {
+            console.log(session);
+            console.log(session?.user?.id);
+            if(session?.user?.id) {
+                navigate("/");
+            }
+        }
+    },[session]);
+
+
 
     return (
         <>

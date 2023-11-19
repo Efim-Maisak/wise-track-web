@@ -151,8 +151,10 @@ import {
     }
 
     useEffect(() => {
-        setInputs(createStateObj(devices));
-        setInputError(createErrorInputObj(devices));
+        if(devices) {
+            setInputs(createStateObj(devices));
+            setInputError(createErrorInputObj(devices));
+        }
     }, [devices]);
 
     useEffect(() => {

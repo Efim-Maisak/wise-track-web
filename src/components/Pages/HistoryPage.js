@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Flex, Spinner, Box } from "@chakra-ui/react";
+import { Container, Flex, Spinner, Box, Text } from "@chakra-ui/react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import IndicationsList from "../IndicationsList/IndicationsList";
 import IndicationsFilter from "../IndicationsFilter/IndicationsFilter";
@@ -22,19 +22,21 @@ const HistoryPage = () => {
     const { getIndications } = supabaseService();
 
     const fetchIndications = async (objectId) => {
-        setLoading(true);
-        try {
-            const res = await getIndications(objectId);
-            if(res.indications) {
-                setComposedIndications(composeIndicationsData(res.indications));
-                setFilteredIndications(composeIndicationsData(res.indications));
-                createYearOptions(composeIndicationsData(res.indications));
-                setLoading(false);
-            }
+        if(objectId) {
+            try {
+                setLoading(true);
+                const res = await getIndications(objectId);
+                if(res.indications) {
+                    setComposedIndications(composeIndicationsData(res.indications));
+                    setFilteredIndications(composeIndicationsData(res.indications));
+                    createYearOptions(composeIndicationsData(res.indications));
+                    setLoading(false);
+                }
 
-        } catch(e) {
-            setLoading(false);
-            throw new Error(e.message);
+            } catch(e) {
+                setLoading(false);
+                throw new Error(e.message);
+            }
         }
     }
 
@@ -112,6 +114,7 @@ const HistoryPage = () => {
                 />
             </Flex>
             <Flex flexDirection="column" justifyContent="start" alignItems="center">
+                {!loading && !composedIndications ? <Text mt={16} color="gray.600" fontWeight="500">Здесь будет отображаться история переданных показаний приборов учета</Text> : null}
                 {!loading
                 ?
                 <Box maxW="100%" mt={16}>

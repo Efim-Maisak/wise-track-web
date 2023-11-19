@@ -5,6 +5,7 @@
 ### Список используемых библиотек:
 
 - ReactJS
+- React router dom
 - Chakra UI
 - Supabase JS client
 - Chart.js

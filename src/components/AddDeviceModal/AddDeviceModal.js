@@ -21,7 +21,7 @@ import {
   import supabaseService from "../../services/supabaseService";
 
 
-const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDeviceIsAdded}) => {
+const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, deviceIsAdded, setDeviceIsAdded}) => {
 
     const [types, setTypes] = useState([]);
     const [deviceTypeSelect, setDeviceTypeSelect] = useState("");
@@ -120,17 +120,24 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, deviceIsAdded, setDe
                 </Select>
                 <FormControl isInvalid={inputError}>
                     <FormLabel mt={4}>Название прибора</FormLabel>
-                    <Input type="text" focusBorderColor="teal.600" value={deviceNameInput} onChange={handleDeviceInput}/>
+                    <Input
+                    type="text"
+                    placeholder="Введите условное название прибора учета"
+                    _placeholder={{ opacity: 0.6, color: "gray.500"}}
+                    focusBorderColor="teal.600"
+                    value={deviceNameInput}
+                    onChange={handleDeviceInput}
+                    />
                     {!inputError ? (
                     <FormHelperText>
-                    Введите условное название прибора учета
+                    Добавить прибор к объекту: {selectedObject}
                     </FormHelperText>
                 ) : (
                     <FormErrorMessage>Поле не должно быть пустым</FormErrorMessage>
                 )}
                 </FormControl>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter pt={8}>
               <Button
               colorScheme="teal"
               isDisabled={!deviceNameInput || !deviceTypeSelect}

@@ -47,26 +47,30 @@ const StatPage = () => {
     };
 
     const fetchIndications = async () => {
-        try {
-            const res = await getIndications(objectId);
-            if(res.indications) {
-                setIndications(composeIndicationsData(res.indications));
-                createYearOptions(composeIndicationsData(res.indications));
-            }
-        }catch(e){
-            throw new Error(e.message);
+        if(objectId) {
+            try {
+                const res = await getIndications(objectId);
+                if(res.indications) {
+                    setIndications(composeIndicationsData(res.indications));
+                    createYearOptions(composeIndicationsData(res.indications));
+                }
+            }catch(e){
+                throw new Error(e.message);
 
+            }
         }
     };
 
     const fetchDevices = async () => {
-        try {
-            const res = await getDevices(objectId);
-            if(res.devices) {
-                setDevices(res.devices);
+        if(objectId) {
+            try {
+                const res = await getDevices(objectId);
+                if(res.devices) {
+                    setDevices(res.devices);
+                }
+            }catch(e){
+                throw new Error(e.message);
             }
-        }catch(e){
-            throw new Error(e.message);
         }
     }
 

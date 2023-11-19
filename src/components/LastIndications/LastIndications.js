@@ -35,24 +35,29 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
 
 
     const fetchLastIndication = async (ObjectId) => {
-        try {
-            await getLastBillingPeriod(ObjectId).then(async res => {
-                if(res.error?.message) {
-                    throw new Error(res.error.message);
-                }
-                if(res.last_indication.length > 0) {
-                    const lastPeriod = res.last_indication[0].billing_period;
-                    const lastInd = await getLastIndication(ObjectId, lastPeriod);
-                    setlastIndicationDate(formatDate(res.last_indication[0].created_at, dateOptions));
-                    setLastIndications(lastInd.indication);
-                } else {
-                    setLastIndications([]);
-                    setlastIndicationDate("Записи отсутствуют");
-                }
-            });
-        } catch(e) {
-            throw new Error(e.message);
+        if(ObjectId) {
+            try {
+                await getLastBillingPeriod(ObjectId).then(async res => {
+                    if(res.error?.message) {
+                        throw new Error(res.error.message);
+                    }
+                    if(res.last_indication.length > 0) {
+                        const lastPeriod = res.last_indication[0].billing_period;
+                        const lastInd = await getLastIndication(ObjectId, lastPeriod);
+                        setlastIndicationDate(formatDate(res.last_indication[0].created_at, dateOptions));
+                        setLastIndications(lastInd.indication);
+                    } else {
+                        setLastIndications([]);
+                        setlastIndicationDate("Записи отсутствуют");
+                    }
+                });
+            } catch(e) {
+                throw new Error(e.message);
+            }
+        } else {
+            setlastIndicationDate("Записи отсутствуют");
         }
+
     };
 
     useEffect(() => {
