@@ -4,9 +4,8 @@ import { useAuth } from "../../hooks/useAuth";
 
 const ProtectedRoute = ({children}) => {
     const { user } = useAuth();
-
     if(!user) {
-        return <Navigate to="/registration"/>
+        return <Navigate replace to="/registration"/>
     }
 
     return <>{children}</>

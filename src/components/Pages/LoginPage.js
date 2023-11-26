@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import {
     Flex,
     Box,
@@ -20,6 +20,8 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { FcGoogle } from "react-icons/fc";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import supabase from "../../config/supabaseClient";
+import { mailValidation } from "../../utils/mailValidation";
+import { passwordValidation } from "../../utils/passwordValidation";
 
 
 const LoginPage = () => {
@@ -27,42 +29,80 @@ const LoginPage = () => {
     const toast = useToast();
     const navigate = useNavigate();
 
+    let emailRef = useRef(null);
+    let passwordRef = useRef(null);
     const [showPassword, setShowPassword] = useState(false);
-    const [emailInput, setEmailInput] = useState("");
-    const [passwordInput, setPasswordInput] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleEmailInput = (e) => {
-        setEmailInput(e.target.value);
-    }
-
-    const handlePasswordInput = (e) => {
-        setPasswordInput(e.target.value);
-    }
 
     const handleLogIn = async () => {
         setLoading(true);
-        try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email: emailInput,
-                password: passwordInput,
-              });
 
-              if (error?.message) {
+        let errorsMsg = {};
+
+        if (!mailValidation(emailRef.current.value)) {
+            errorsMsg = { ...errorsMsg, email: "Ошибка в адресе электронной почты" };
+        }
+
+        if (!passwordValidation(passwordRef.current.value)) {
+            errorsMsg = { ...errorsMsg, password: "Введенный пароль менее 6 символов" };
+        }
+
+        if(Object.keys(errorsMsg).length === 0) {
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: emailRef.current.value,
+                    password: passwordRef.current.value,
+                  });
+
+                  if (error?.message) {
+                    setLoading(false);
+                    toast({
+                        description: `Ошибка: ${error.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true
+                        });
+                  } else {
+                    setLoading(false);
+                    const { user } = data;
+                    if(user) navigate("/");
+                  }
+            } catch(e) {
                 setLoading(false);
+                throw new Error(e.message);
+            }
+        } else {
+            setLoading(false);
+            toast({
+                description: Object.values(errorsMsg).join(", "),
+                status: "error",
+                duration: 5000,
+                isClosable: true
+                });
+            errorsMsg = {};
+            passwordRef.current.value = "";
+        }
+    }
+
+    const handleLoginWithGoogle = async () => {
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: "google",
+              });
+              if(error?.message) {
                 toast({
                     description: `Ошибка: ${error.message}`,
-                    status: 'error',
+                    status: "error",
                     duration: 5000,
                     isClosable: true
                     });
-              } else {
-                setLoading(false);
-                navigate("/");
-              }
+                }
         } catch(e) {
-            setLoading(false);
             throw new Error(e.message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -89,11 +129,13 @@ const LoginPage = () => {
                         p={8}>
                         <Stack spacing={4}>
                             <Button
-                                variant='outline'
+                                isLoading={loading}
+                                variant="outline"
                                 size="lg"
                                 color={'blue.500'}
                                 iconSpacing="16px"
                                 leftIcon={<FcGoogle pr="16px" fontSize="26px"/>}
+                                onClick={handleLoginWithGoogle}
                                 >
                                 Войти через Google
                             </Button>
@@ -107,8 +149,7 @@ const LoginPage = () => {
                             <FormLabel>Электронная почта</FormLabel>
                             <Input
                             type="email"
-                            value={emailInput}
-                            onChange={handleEmailInput}
+                            ref={emailRef}
                             />
                             </FormControl>
                             <FormControl id="password" isRequired>
@@ -116,8 +157,7 @@ const LoginPage = () => {
                             <InputGroup>
                                 <Input
                                 type={showPassword ? 'text' : 'password'}
-                                value={passwordInput}
-                                onChange={handlePasswordInput}
+                                ref={passwordRef}
                                 />
                                 <InputRightElement h={'full'}>
                                 <Button

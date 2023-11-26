@@ -1,58 +1,78 @@
 import React, {useState, useEffect, useContext, createContext} from "react";
 import supabase from "../config/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 
-const AuthContext = createContext({
-    session: null,
-    user: null,
-    signOut: () => {}
-});
 
-export const AuthProvider = ({children}) => {
+const AuthContext = createContext({});
 
-    const [user, setUser] = useState(null);
-    const [session, setSession] = useState(null);
-    const [loading, setLoading] = useState(true);
+export const useAuth = () => useContext(AuthContext);
 
-    useEffect(() => {
+const login = (email, password) =>
+  supabase.auth.signInWithPassword({ email, password });
 
-        const setData = async () => {
-            const { data: session, error} = await supabase.auth.getSession();
-            if(error) {
-                throw new Error(error.message);
-            };
-            setSession(session);
-            setUser(session?.user);
-            setLoading(false);
-        };
+const signOut = () => supabase.auth.signOut();
 
-        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            setUser(session?.user);
-            setLoading(false);
-        });
+const AuthProvider = ({ children }) => {
 
-        setData();
+  const navigate = useNavigate();
+  const path = window.location.pathname;
 
-        return () => {
-            listener?.subscription.unsubscribe();
-        };
+  const [auth, setAuth] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(null);
 
-    }, []);
+  useEffect(() => {
+    setLoading(true);
 
-    const value = {
-        session,
-        user,
-        signOut: () => supabase.auth.signOut()
+    const getUser = async () => {
+
+        const { data } = await supabase.auth.getUser();
+        const { user: currentUser } = data;
+        setUser(currentUser ?? null);
+        setAuth(currentUser ? true : false);
+        setLoading(false);
+
+        if(currentUser) {
+          switch(path) {
+            case "/history" :
+              navigate("/history");
+              break;
+            case "/statistics" :
+              navigate("/statistics");
+              break;
+            case "/change-pass" :
+              navigate("/change-pass");
+              break;
+            default :
+              navigate("/");
+          }
+        }
+      };
+
+    getUser();
+
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setAuth(false);
+      } else if (event === "SIGNED_IN") {
+        setUser(session.user);
+        setAuth(true);
+      } else if (event === "SIGNED_OUT") {
+        setAuth(false);
+        setUser(null);
+      }
+    });
+    return () => {
+      data.subscription.unsubscribe();
     };
+  }, []);
 
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ auth, user, login, signOut }}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export default AuthProvider;

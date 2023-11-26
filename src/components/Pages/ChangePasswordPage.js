@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import {
     Flex,
     Box,
@@ -20,41 +20,55 @@ const ChangePasswordPage = () => {
     const toast = useToast();
     const navigate =  useNavigate();
 
-    const [newPassword, setNewPassword] = useState("");
-    const [newPasswordConfirmed, setNewPasswordConfirmed] = useState("");
+    let passwordRef = useRef(null);
+    let passwordConfirmRef = useRef(null);
     const [loading, setLoading] = useState(false);
 
-    // требуется валидация совпадения двух паролей
-
-    const handleNewPassInput = (e) => {
-        setNewPassword(e.target.value);
-    };
-
-    const handleNewPassConfirmedInput = (e) => {
-        setNewPasswordConfirmed(e.target.value);
-    };
 
     const handlePasswordChange = async () => {
-        try {
-            setLoading(true);
-            const { error } = await supabase.auth.updateUser({
-                password: newPassword
-              })
-              if(error?.message) {
-                toast({
-                    description: `Ошибка: ${error.message}`,
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true
-                    });
-              }
-        } catch(e) {
-            throw new Error(e.message);
-        } finally {
+
+        let errorMsg = "";
+
+        if(passwordRef.current?.value !== passwordConfirmRef.current?.value) {
+            errorMsg = "Пароли не совпадают";
+        }
+
+        if(!passwordRef.current?.value || !passwordConfirmRef.current?.value) {
+            errorMsg = "Поля не должны быть пустыми";
+        }
+
+        if(!errorMsg) {
+            try {
+                setLoading(true);
+                const { error } = await supabase.auth.updateUser({
+                    password: passwordRef.current.value
+                  })
+                  if(error?.message) {
+                    toast({
+                        description: `Ошибка: ${error.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true
+                        });
+                  }
+            } catch(e) {
+                throw new Error(e.message);
+            } finally {
+                setLoading(false);
+                passwordRef = "";
+                passwordConfirmRef = "";
+                navigate("/");
+            }
+        } else {
+            toast({
+                description: errorMsg,
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+                });
             setLoading(false);
-            setNewPassword("");
-            setNewPasswordConfirmed("");
-            navigate("/login");
+            passwordRef = "";
+            passwordConfirmRef = "";
         }
     };
 
@@ -82,16 +96,14 @@ const ChangePasswordPage = () => {
                         <FormLabel>Пароль</FormLabel>
                         <Input
                         type="text"
-                        value={newPassword}
-                        onChange={handleNewPassInput}
+                        ref={passwordRef}
                         />
                         </FormControl>
                         <FormControl id="password_confirm" isRequired>
                         <FormLabel>Подтверждение пароля</FormLabel>
                             <Input
                             type="text"
-                            value={newPasswordConfirmed}
-                            onChange={handleNewPassConfirmedInput}
+                            ref={passwordConfirmRef}
                             />
                         </FormControl>
                         <Stack spacing={10} pt={2}>

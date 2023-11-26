@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import {
     Flex,
     Box,
@@ -12,45 +12,60 @@ import {
     useToast
   } from "@chakra-ui/react"
   import supabase from "../../config/supabaseClient";
+  import { mailValidation } from "../../utils/mailValidation";
 
 
 const PasswordRecoveryPage = () => {
 
     const toast = useToast();
 
-    const [email, setEmail] = useState("");
+    let emailRef = useRef(null);
     const [loading, setLoading] = useState(false);
 
-    const handleEmailInput = (e) => {
-        setEmail(e.target.value);
-    };
-
-    // требуется функция по валидации почты
 
     const handleRecovery = async () => {
-        try {
-            setLoading(true);
-            const { error } = await supabase.auth.resetPasswordForEmail(email);
-            if(error?.message) {
-                toast({
-                    description: `Ошибка: ${error.message}`,
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true
-                    });
-            } else {
-                toast({
-                    description: "Письмо для восстановления пароля отправлено",
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true
-                  });
+
+        let errorMsg = "";
+
+        if(!mailValidation(emailRef.current.value)) {
+            errorMsg = "Ошибка в адресе электронной почты";
+        }
+
+        if(!errorMsg) {
+            try {
+                setLoading(true);
+                const { error } = await supabase.auth.resetPasswordForEmail(emailRef.current.value, {
+                    redirectTo: 'http://localhost:3000/change-pass'
+                });
+                if(error?.message) {
+                    toast({
+                        description: `Ошибка: ${error.message}`,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true
+                        });
+                } else {
+                    toast({
+                        description: "Письмо для восстановления пароля отправлено",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true
+                      });
+                }
+            } catch(e) {
+                throw new Error(e.message);
+            } finally {
+                setLoading(false);
             }
-        } catch(e) {
-            throw new Error(e.message);
-        } finally {
+        } else {
+            toast({
+                description: errorMsg,
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+                });
             setLoading(false);
-            setEmail("");
+            errorMsg = "";
         }
     };
 
@@ -79,8 +94,7 @@ const PasswordRecoveryPage = () => {
                         <FormLabel>Почта для восстановления</FormLabel>
                         <Input
                         type="email"
-                        value={email}
-                        onChange={handleEmailInput}
+                        ref={emailRef}
                         />
                         </FormControl>
                         <Stack spacing={10} pt={2}>
