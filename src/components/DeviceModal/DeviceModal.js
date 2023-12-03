@@ -35,7 +35,7 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
     const fetchDeviceLastIndication = async (deviceId) => {
         try {
             const res = await getLastIndicationFromDevice(deviceId);
-            setDeviceLastValue(res.indication[0].value);
+            setDeviceLastValue(res.indication[0]?.value || 0);
         }catch(e) {
             throw new Error(e.message);
         }

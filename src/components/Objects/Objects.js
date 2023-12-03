@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {
     Box,
     Flex,
@@ -48,6 +48,11 @@ const Objects = () => {
     const [deviceIsAdded, setDeviceIsAdded] = useState(false);
     const [deviceIsDeleted, setDeviceIsDeleted] = useState(false);
     const [indicationsIsAdded, setIndicationsIsAdded] = useState(false);
+
+    const prevObjectIsAdded = useRef(objectIsAdded);
+    const prevObjectIsDeleted = useRef(objectIsDeleted);
+    const prevDeviceIsAdded = useRef(deviceIsAdded);
+    const prevDeviceIsDeleted = useRef(deviceIsDeleted);
 
     const { isOpen: isOpenAddModal, onOpen: onOpenAddModal, onClose: onCloseAddModal } = useDisclosure();
     const { isOpen: isOpenDeleteModal, onOpen: onOpenDeleteModal, onClose: onCloseDeleteModal } = useDisclosure();
@@ -112,13 +117,21 @@ const Objects = () => {
     }, [selectedObject]);
 
     useEffect(() => {
-        fetchUserObjects();
+        // условие для предотвращения срабатывания эффекта при первом рендере
+        if (prevObjectIsAdded.current !== objectIsAdded || prevObjectIsDeleted.current !== objectIsDeleted) {
+            fetchUserObjects();
+        }
+        prevObjectIsAdded.current = objectIsAdded;
+        prevObjectIsDeleted.current = objectIsDeleted;
     }, [objectIsAdded, objectIsDeleted]);
 
     useEffect(() => {
-        fetchUserDevices(selectedObjectId);
+        if (prevDeviceIsAdded.current !== deviceIsAdded || prevDeviceIsDeleted.current !== deviceIsDeleted) {
+            fetchUserDevices(selectedObjectId);
+        }
+        prevDeviceIsAdded.current = deviceIsAdded;
+        prevDeviceIsDeleted.current = deviceIsDeleted;
     }, [deviceIsAdded, deviceIsDeleted]);
-
 
     return (
         <>

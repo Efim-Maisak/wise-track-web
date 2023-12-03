@@ -56,6 +56,7 @@ const PasswordRecoveryPage = () => {
                 throw new Error(e.message);
             } finally {
                 setLoading(false);
+                emailRef.current.value = "";
             }
         } else {
             toast({

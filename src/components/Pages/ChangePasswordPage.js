@@ -14,8 +14,7 @@ import {
   import { useNavigate } from "react-router-dom";
   import supabase from "../../config/supabaseClient";
 
-
-const ChangePasswordPage = () => {
+  const ChangePasswordPage = () => {
 
     const toast = useToast();
     const navigate =  useNavigate();
@@ -24,17 +23,16 @@ const ChangePasswordPage = () => {
     let passwordConfirmRef = useRef(null);
     const [loading, setLoading] = useState(false);
 
-
     const handlePasswordChange = async () => {
 
         let errorMsg = "";
 
-        if(passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-            errorMsg = "Пароли не совпадают";
+        if(!passwordRef.current?.value || !passwordConfirmRef.current?.value) {
+            errorMsg += "Поля не должны быть пустыми. ";
         }
 
-        if(!passwordRef.current?.value || !passwordConfirmRef.current?.value) {
-            errorMsg = "Поля не должны быть пустыми";
+        if(passwordRef.current?.value !== passwordConfirmRef.current?.value) {
+            errorMsg += "Пароли не совпадают. ";
         }
 
         if(!errorMsg) {
@@ -50,14 +48,13 @@ const ChangePasswordPage = () => {
                         duration: 5000,
                         isClosable: true
                         });
+                  } else {
+                    navigate("/");
                   }
             } catch(e) {
                 throw new Error(e.message);
             } finally {
                 setLoading(false);
-                passwordRef = "";
-                passwordConfirmRef = "";
-                navigate("/");
             }
         } else {
             toast({
@@ -67,10 +64,9 @@ const ChangePasswordPage = () => {
                 isClosable: true
                 });
             setLoading(false);
-            passwordRef = "";
-            passwordConfirmRef = "";
         }
     };
+
 
     return (
             <Flex
