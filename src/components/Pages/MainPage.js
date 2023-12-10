@@ -5,7 +5,7 @@ import Objects from "../Objects/Objects";
 const MainPage = ()=> {
     return (
         <>
-        <Box as="div" h="100%" w="100%">
+        <Box as="div" minH="100vh" w="100%" bg="gray.50">
             <Container maxW='4xl' as="div" p="0">
                 <Flex minH="80vh" flexDirection="column" justifyContent="center" alignItems="center">
                     <Objects/>

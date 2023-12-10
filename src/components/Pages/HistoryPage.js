@@ -103,37 +103,39 @@ const HistoryPage = () => {
 
     return (
         <>
-        <Container maxW='4xl' as="div" p="0">
-            <Flex mt={16} justifyContent="center">
-                <IndicationsFilter
-                maxW="100%"
-                setFilteredIndications={setFilteredIndications}
-                indications={composedIndications}
-                filteredIndications={filteredIndications}
-                yearOptions={yearOptions}
-                />
-            </Flex>
-            <Flex flexDirection="column" justifyContent="start" alignItems="center">
-                {!loading && !composedIndications ? <Text mt={16} color="gray.600" fontWeight="500">Здесь будет отображаться история переданных показаний приборов учета</Text> : null}
-                {!loading
-                ?
-                <Box maxW="100%" mt={16}>
-                    <IndicationsList
-                    indications={sortIndicationsByDeviceName(filteredIndications)}
+        <Flex w="100%" minH="100vh" bg="gray.50">
+            <Container maxW='4xl' as="div" p="0">
+                <Flex mt={16} justifyContent="center">
+                    <IndicationsFilter
+                    maxW="100%"
+                    setFilteredIndications={setFilteredIndications}
+                    indications={composedIndications}
+                    filteredIndications={filteredIndications}
+                    yearOptions={yearOptions}
                     />
-                </Box>
-                :
-                <Spinner
-                mt={16}
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="teal.500"
-                size="xl"
-                />
-                }
-            </Flex>
-        </Container>
+                </Flex>
+                <Flex flexDirection="column" justifyContent="start" alignItems="center">
+                    {!loading && !composedIndications ? <Text mt={16} color="gray.600" fontWeight="500">Здесь будет отображаться история переданных показаний приборов учета</Text> : null}
+                    {!loading
+                    ?
+                    <Box maxW="100%" mt={16}>
+                        <IndicationsList
+                        indications={sortIndicationsByDeviceName(filteredIndications)}
+                        />
+                    </Box>
+                    :
+                    <Spinner
+                    mt={16}
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="teal.500"
+                    size="xl"
+                    />
+                    }
+                </Flex>
+            </Container>
+        </Flex>
         </>
     );
 };

@@ -77,7 +77,7 @@ const IndicationsFilter = ({setFilteredIndications, indications, filteredIndicat
 
     return (
         <>
-            <Box as="section" w="620px" boxShadow="base" borderRadius={8}>
+            <Box as="section" w="620px" boxShadow="lg" borderRadius={8} bg="white">
                 <HStack p={4}>
                     <InputGroup>
                         <InputLeftElement pointerEvents='none'>

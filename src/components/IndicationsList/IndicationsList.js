@@ -35,7 +35,7 @@ const IndicationsList = ({indications}) => {
             ?
             <Text mt={16} fontWeight="500" color="gray.600" textAlign="center">Записи отсутствуют</Text>
             :
-            <Box as="section" w="620px" boxShadow="base" borderRadius={8}>
+            <Box as="section" w="620px" boxShadow="lg" borderRadius={8} bg="white">
                 <Stack
                 divider={<StackDivider borderColor="gray.200"/>}
                 spacing="0"

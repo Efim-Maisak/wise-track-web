@@ -217,7 +217,7 @@ const View = ({ selectedObject,
                 :
                 null
                 }
-                <Box as="section" mt="4" p="4" w="620px" boxShadow="base" borderRadius="8px">
+                <Box as="section" mt={8} p="4" w="620px" boxShadow="lg" borderRadius="8px" bg="white">
                     <Heading as="h3" size="md">Мои объекты</Heading>
                     <Flex justifyContent="space-between" mt="4">
                         <Tooltip bg="white" color="gray.600" label="Выбранный объект" openDelay="600">
@@ -259,15 +259,13 @@ const View = ({ selectedObject,
                         </Menu>
                     </Flex>
                 </Box>
-                <Box as="section" mt="4" p="4 0 4 4" w="620px" boxShadow="base" borderRadius="8px">
-                    <Devices
-                    onOpenAddDeviceModal={onOpenAddDeviceModal}
-                    deviceIsDeleted={deviceIsDeleted}
-                    setDeviceIsDeleted={setDeviceIsDeleted}
-                    devices={devices}
-                    objects={objects}
-                    />
-                </Box>
+                <Devices
+                onOpenAddDeviceModal={onOpenAddDeviceModal}
+                deviceIsDeleted={deviceIsDeleted}
+                setDeviceIsDeleted={setDeviceIsDeleted}
+                devices={devices}
+                objects={objects}
+                />
                 <LastIndications selectedObjectId={selectedObjectId} indicationsIsAdded={indicationsIsAdded}/>
                 <RecordReadings devices={devices} indicationsIsAdded={indicationsIsAdded} setIndicationsIsAdded={setIndicationsIsAdded}/>
             </>

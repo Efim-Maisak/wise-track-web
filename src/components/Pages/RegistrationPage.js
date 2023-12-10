@@ -11,6 +11,7 @@ import {
     Button,
     Heading,
     Text,
+    Image,
     Link as ChackraLink,
     Divider,
     AbsoluteCenter,
@@ -22,6 +23,7 @@ import { FcGoogle } from "react-icons/fc";
 import supabase from "../../config/supabaseClient";
 import { mailValidation } from "../../utils/mailValidation";
 import { passwordValidation } from "../../utils/passwordValidation";
+import city from "../../images/city.png"
 
 
 const RegistrationPage = () => {
@@ -114,7 +116,13 @@ const RegistrationPage = () => {
             bg="gray.50"
             >
                 <Flex flexDirection="row" justifyContent="center">
-                    <Box bg="gray.100" w={'md'} boxShadow={'lg'} rounded={'lg'}></Box>
+                    <Image
+                    src={city}
+                    fit="cover"
+                    w={'md'}
+                    boxShadow={'lg'}
+                    rounded={'lg'}
+                    />
                     <Stack spacing={8} mx={'auto'} w={'md'} py={12} px={6}>
                         <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'}>

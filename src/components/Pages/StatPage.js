@@ -196,53 +196,63 @@ const StatPage = () => {
 
     return (
         <>
-            <Container as="div" maxW='4xl' p="0">
-                <Box
-                 w="620px"
-                 pt={16} margin="auto"
-                 display={indications.length === 0 ? "none" : "block"}
-                 >
-                    <Flex justifyContent="flex-end">
-                        <Menu placement="bottom-end">
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                            {selectedYear}
-                        </MenuButton>
-                        <MenuList minW="0">
-                            {yearOptions.map((year, i) => ((
-                            <MenuItem w="90px" key={i} value={year} onClick={handleSelectYear}>{year}</MenuItem>
-                            )))}
-                        </MenuList>
-                        </Menu>
-                    </Flex>
-                </Box>
-                {loading
-                ?
-                <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
-                    <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="teal.500"
-                    size="xl"
-                    />
-                </Flex>
-                :
-                <>
-                    {indications.length === 0
+            <Flex w="100%" minH="100vh" bg="gray.50">
+                <Container as="div" maxW='4xl' p="0">
+                    <Box
+                    w="620px"
+                    pt={16} margin="auto"
+                    display={indications.length === 0 ? "none" : "block"}
+                    >
+                        <Flex justifyContent="flex-end">
+                            <Menu placement="bottom-end">
+                            <MenuButton
+                            px={4}
+                            py={2}
+                            transition="all 0.4s"
+                            borderRadius="8px"
+                            boxShadow="lg"
+                            bg="white"
+                            _hover={{ bg: "gray.200" }}
+                            >
+                                {selectedYear} <ChevronDownIcon />
+                            </MenuButton>
+                            <MenuList minW="0">
+                                {yearOptions.map((year, i) => ((
+                                <MenuItem w="90px" key={i} value={year} onClick={handleSelectYear}>{year}</MenuItem>
+                                )))}
+                            </MenuList>
+                            </Menu>
+                        </Flex>
+                    </Box>
+                    {loading
                     ?
                     <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
-                        <Text fontWeight="500" color="gray.600" textAlign="center">Данные для отображения отсутствуют</Text>
+                        <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="teal.500"
+                        size="xl"
+                        />
                     </Flex>
                     :
-                    <Flex justifyContent="center">
-                        <Box as="section" mt={8} w="620px">
-                            <BarChart chartData={charts} devices={devices}/>
-                        </Box>
-                    </Flex>
+                    <>
+                        {indications.length === 0
+                        ?
+                        <Flex h="80vh" flexDirection="column" justifyContent="center" alignItems="center">
+                            <Text fontWeight="500" color="gray.600" textAlign="center">Данные для отображения отсутствуют</Text>
+                        </Flex>
+                        :
+                        <Flex justifyContent="center">
+                            <Box as="section" mt={8} w="620px" borderRadius="8px" bg="white" boxShadow="lg" _last={{ mb: 16 }}>
+                                <BarChart chartData={charts} devices={devices}/>
+                            </Box>
+                        </Flex>
+                        }
+                    </>
                     }
-                </>
-                }
-            </Container>
+                </Container>
+            </Flex>
         </>
     );
 };

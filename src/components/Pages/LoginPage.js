@@ -13,6 +13,7 @@ import {
     Text,
     Divider,
     AbsoluteCenter,
+    Image,
     Link as ChackraLink,
     useToast
   } from "@chakra-ui/react"
@@ -22,6 +23,7 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import supabase from "../../config/supabaseClient";
 import { mailValidation } from "../../utils/mailValidation";
 import { passwordValidation } from "../../utils/passwordValidation";
+import bath from "../../images/bath.png";
 
 
 const LoginPage = () => {
@@ -115,7 +117,13 @@ const LoginPage = () => {
             bg="gray.50"
             >
                 <Flex flexDirection="row" justifyContent="center">
-                    <Box bg="gray.100" w={'md'} boxShadow={'lg'} rounded={'lg'}></Box>
+                    <Image
+                    src={bath}
+                    fit="cover"
+                    w={'md'}
+                    boxShadow={'lg'}
+                    rounded={'lg'}
+                    />
                     <Stack spacing={8} mx={'auto'} w={'md'} py={12} px={6}>
                         <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'}>

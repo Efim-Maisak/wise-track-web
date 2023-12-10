@@ -29,7 +29,6 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
       };
 
     const { getLastIndication, getLastBillingPeriod } = supabaseService();
-
     const [lastIndications, setLastIndications] = useState([]);
     const [lastIndicationDate, setlastIndicationDate] = useState(null);
 
@@ -57,16 +56,16 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
         } else {
             setlastIndicationDate("Записи отсутствуют");
         }
-
     };
 
-    useEffect(() => {
+    useEffect( () => {
         fetchLastIndication(selectedObjectId);
     }, [selectedObjectId, indicationsIsAdded]);
 
+
     return (
         <>
-            <Box as="section" mt="4" p="4" w="620px" boxShadow="base" borderRadius="8px">
+            <Box as="section" mt={8} p="4" w="620px" boxShadow="lg" borderRadius="8px" bg="white">
                 <Heading as="h3" pb={4} size="md">Последние переданные показания</Heading>
                 <Flex>
                     {lastIndications.length === 0
