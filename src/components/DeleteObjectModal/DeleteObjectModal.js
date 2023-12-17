@@ -53,8 +53,8 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
     return (
         <>
         <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
+          <ModalOverlay/>
+          <ModalContent mx="10px">
             <ModalHeader>Удалить объект</ModalHeader>
             <ModalCloseButton />
             <ModalBody

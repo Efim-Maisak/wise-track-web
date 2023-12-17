@@ -104,7 +104,7 @@ const HistoryPage = () => {
     return (
         <>
         <Flex w="100%" minH="100vh" bg="gray.50">
-            <Container maxW='4xl' as="div" p="0">
+            <Container maxW='4xl' as="div" p="0" px="10px">
                 <Flex mt={16} justifyContent="center">
                     <IndicationsFilter
                     maxW="100%"
@@ -115,14 +115,19 @@ const HistoryPage = () => {
                     />
                 </Flex>
                 <Flex flexDirection="column" justifyContent="start" alignItems="center">
-                    {!loading && !composedIndications ? <Text mt={16} color="gray.600" fontWeight="500">Здесь будет отображаться история переданных показаний приборов учета</Text> : null}
+                    {!loading && !composedIndications
+                    ?
+                    <Box maxW="620px" margin="0 auto" mt={16} p="20px">
+                        <Text color="gray.600" fontWeight="500" textAlign="center">
+                        Здесь будет отображаться история переданных показаний приборов учета
+                        </Text>
+                    </Box>
+                    : null}
                     {!loading
                     ?
-                    <Box maxW="100%" mt={16}>
-                        <IndicationsList
-                        indications={sortIndicationsByDeviceName(filteredIndications)}
-                        />
-                    </Box>
+                    <IndicationsList
+                    indications={sortIndicationsByDeviceName(filteredIndications)}
+                    />
                     :
                     <Spinner
                     mt={16}

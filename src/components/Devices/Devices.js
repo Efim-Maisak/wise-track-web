@@ -32,8 +32,16 @@ const Devices = ({devices, objects, onOpenAddDeviceModal, deviceIsDeleted, setDe
 
     return (
         <>
-            <Box as="section" mt={8} w="620px" boxShadow="lg" bg="white" borderRadius="8px">
-                <Heading p="4" as="h3" size="md">Мои приборы учета</Heading>
+            <Box
+            as="section"
+            mt={8}
+            maxW="620px"
+            w="100%"
+            boxShadow="lg"
+            bg="white"
+            borderRadius="8px"
+            >
+                <Heading p="4" as="h3" size={{ base: "sm", sm: "sm", md: "md"}}>Мои приборы учета</Heading>
                 <Flex
                 w="100%"
                 h="190px"

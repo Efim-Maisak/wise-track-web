@@ -35,7 +35,15 @@ const IndicationsList = ({indications}) => {
             ?
             <Text mt={16} fontWeight="500" color="gray.600" textAlign="center">Записи отсутствуют</Text>
             :
-            <Box as="section" w="620px" boxShadow="lg" borderRadius={8} bg="white">
+            <Box
+            as="section"
+            maxW="620px"
+            w="100%"
+            boxShadow="lg"
+            borderRadius={8}
+            bg="white"
+            mt={16}
+            >
                 <Stack
                 divider={<StackDivider borderColor="gray.200"/>}
                 spacing="0"
@@ -44,6 +52,7 @@ const IndicationsList = ({indications}) => {
                     {indications && indications.map((ind, i) => ((
                     <Box
                     p={4}
+                    w="100%"
                     h="60px"
                     cursor="pointer"
                     _hover={{ bg: "#ebedf0" }}

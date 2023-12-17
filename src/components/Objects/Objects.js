@@ -15,7 +15,7 @@ import {
     Tooltip,
     Select
     } from "@chakra-ui/react";
-import { FaBars } from "react-icons/fa6";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 import Devices from "../Devices/Devices";
 import RecordReadings from "../RecordReadings/RecordReadings";
@@ -68,7 +68,7 @@ const Objects = () => {
         } catch(e) {
             throw new Error(e.message);
         }
-    }
+    };
 
     const fetchUserDevices = async (objectId) => {
         if(objectId) {
@@ -198,14 +198,15 @@ const View = ({ selectedObject,
                 setIndicationsIsAdded,
                 selectedObjectId,
                 objects,
-                devices}) => {
+                devices }) => {
     return(
             <>
                 {
                 !objects || objects.length === 0
                 ?
                 <Alert
-                w="620px"
+                maxW="620px"
+                w="100%"
                 mt={4}
                 status="info"
                 fontSize='sm'
@@ -217,8 +218,16 @@ const View = ({ selectedObject,
                 :
                 null
                 }
-                <Box as="section" mt={8} p="4" w="620px" boxShadow="lg" borderRadius="8px" bg="white">
-                    <Heading as="h3" size="md">Мои объекты</Heading>
+                <Box
+                as="section"
+                mt={8} p="4"
+                maxW="620px"
+                w="100%"
+                boxShadow="lg"
+                borderRadius="8px"
+                bg="white"
+                 >
+                    <Heading as="h3" size={{ base: "sm", sm: "sm", md: "md"}}>Мои объекты</Heading>
                     <Flex justifyContent="space-between" mt="4">
                         <Tooltip bg="white" color="gray.600" label="Выбранный объект" openDelay="600">
                             <Select
@@ -244,8 +253,9 @@ const View = ({ selectedObject,
                         <Menu placement="bottom-end">
                         <MenuButton
                             as={IconButton}
+                            ml="10px"
                             aria-label='Options'
-                            icon={<FaBars/>}
+                            icon={<HiDotsHorizontal/>}
                             variant='outline'
                         />
                         <MenuList minW="0">
@@ -266,10 +276,10 @@ const View = ({ selectedObject,
                 devices={devices}
                 objects={objects}
                 />
-                <LastIndications selectedObjectId={selectedObjectId} indicationsIsAdded={indicationsIsAdded}/>
+                {objects ? <LastIndications selectedObjectId={selectedObjectId} indicationsIsAdded={indicationsIsAdded}/> : null}
                 <RecordReadings devices={devices} indicationsIsAdded={indicationsIsAdded} setIndicationsIsAdded={setIndicationsIsAdded}/>
             </>
     )
-}
+};
 
 export default Objects;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import {
+    Box,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -167,9 +168,9 @@ import {
         <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Записать показания приборов учета</ModalHeader>
+                <ModalHeader><Box pr="30px">Записать показания приборов учета</Box></ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pt={8}>
+                <ModalBody pt={8} px={{base: "12px", sm: "16px", md: "24px"}}>
                 <Flex justifyContent="space-between" alignItems="center">
                 <FormLabel>Платежный период:</FormLabel>
                 <Input w="240px" type="month" value={monthInput} focusBorderColor="teal.600" onChange={handleMonthInputChange}></Input>

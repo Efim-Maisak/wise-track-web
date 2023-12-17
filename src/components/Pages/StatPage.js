@@ -5,7 +5,6 @@ import { Container,
         Text,
         Menu,
         MenuButton,
-        Button,
         MenuList,
         MenuItem,
         Spinner
@@ -197,9 +196,10 @@ const StatPage = () => {
     return (
         <>
             <Flex w="100%" minH="100vh" bg="gray.50">
-                <Container as="div" maxW='4xl' p="0">
+                <Container as="div" maxW='4xl' p="0" px="10px">
                     <Box
-                    w="620px"
+                    maxW="620px"
+                    w="100%"
                     pt={16} margin="auto"
                     display={indications.length === 0 ? "none" : "block"}
                     >
@@ -244,7 +244,15 @@ const StatPage = () => {
                         </Flex>
                         :
                         <Flex justifyContent="center">
-                            <Box as="section" mt={8} w="620px" borderRadius="8px" bg="white" boxShadow="lg" _last={{ mb: 16 }}>
+                            <Box
+                            as="section"
+                            mt={8}
+                            maxW="620px"
+                            w="100%"
+                            borderRadius="8px"
+                            bg="white"
+                            boxShadow="lg"
+                            _last={{ mb: 16 }}>
                                 <BarChart chartData={charts} devices={devices}/>
                             </Box>
                         </Flex>

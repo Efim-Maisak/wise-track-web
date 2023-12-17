@@ -21,11 +21,15 @@ import {
     Td,
     TableContainer
   } from '@chakra-ui/react'
+import { useMediaQuery } from "@chakra-ui/react";
 import { countTotal } from "../../utils/countTotal";
 import { formatDate } from "../../utils/formatDate";
+import "./indicationModal.css";
 
 
 const IndicationModal = ({isOpen, onClose, indication}) => {
+
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const dateOptions = {
         day: 'numeric',
@@ -43,10 +47,10 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
             <ModalContent>
                 <ModalHeader>{Object.keys(indication)[0]}</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
-                    <Box p={4}>
-                        <HStack justifyContent="space-between">
-                            <Box w="180px" h="180px" alignSelf="center">
+                <ModalBody px={isMobile ? "8px" : null}>
+                    <Box p={{base: "0", sm: "8px", md: "16px"}}>
+                        <HStack flexWrap={isMobile ? "wrap" : "none"} justifyContent={isMobile ? "center" : "space-beetwen"}>
+                            <Box w={isMobile ? "100%" : "180px"} h={isMobile ? "60px" : "180px"} mb={isMobile ? "10px" : null } alignSelf="center">
                                 <Stack h="100%" justifyContent="center" alignItems="center">
                                     <Text fontWeight="600" textAlign="center">Дата передачи показаний:</Text>
                                     <Badge
@@ -59,30 +63,30 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
                                 </Stack>
 
                             </Box>
-                            <Box p={4} w="180px" h="180px" boxShadow="base" borderRadius={8}>
-                                <Text mt={4} fontWeight="600" textAlign="center">Холодная вода (всего):</Text>
+                            <Box p={4} w="180px" h={isMobile ? "120px" : "180px"} boxShadow="base" borderRadius={8}>
+                                <Text mt={isMobile ? "0px" : "20px"} fontWeight="600" textAlign="center">Холодная вода (всего):</Text>
                                 <HStack mt={2} justifyContent="center">
-                                    <Text fontSize="32px" fontWeight="800" color="gray.600">{countTotal(indication, "CW")[0]}</Text>
-                                    <Text fontSize="28px" fontWeight="600" color="gray.600">/</Text>
-                                    <Text fontSize="26px" fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "CW")[1]}</Text>
+                                    <Text fontSize={isMobile ? "24px" : "32px"} fontWeight="800" color="gray.600">{countTotal(indication, "CW")[0]}</Text>
+                                    <Text fontSize={isMobile ? "20px" : "28px"} fontWeight="600" color="gray.600">/</Text>
+                                    <Text fontSize={isMobile ? "18px" : "26px"} fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "CW")[1]}</Text>
                                 </HStack>
                             </Box>
-                            <Box p={4} w="180px" h="180px" boxShadow="base" borderRadius={8}>
-                                <Text mt={4} fontWeight="600" textAlign="center">Горячая вода (всего):</Text>
+                            <Box p={4} w="180px" h={isMobile ? "120px" : "180px"} boxShadow="base" borderRadius={8}>
+                                <Text mt={isMobile ? "0px" : "20px"} fontWeight="600" textAlign="center">Горячая вода (всего):</Text>
                                 <HStack mt={2} justifyContent="center">
-                                    <Text fontSize="32px" fontWeight="800" color="gray.600">{countTotal(indication, "HW")[0]}</Text>
-                                    <Text fontSize="28px" fontWeight="600" color="gray.600">/</Text>
-                                    <Text fontSize="26px" fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "HW")[1]}</Text>
+                                    <Text fontSize={isMobile ? "24px" : "32px"} fontWeight="800" color="gray.600">{countTotal(indication, "HW")[0]}</Text>
+                                    <Text fontSize={isMobile ? "20px" : "28px"} fontWeight="600" color="gray.600">/</Text>
+                                    <Text fontSize={isMobile ? "18px" : "26px"} fontWeight="800" color="gray.400" alignSelf="flex-end">{countTotal(indication, "HW")[1]}</Text>
                                 </HStack>
                             </Box>
                         </HStack>
                         <TableContainer mt={8}>
-                            <Table size="md">
+                            <Table size={{base: "sm", sm: "sm", md: "md"}} className="table-tiny-modal">
                                 <Thead>
                                 <Tr>
                                     <Th>Прибор учета</Th>
-                                    <Th>Показания</Th>
-                                    <Th>За месяц</Th>
+                                    <Th>{isMobile ? "Показ." : "Показания"}</Th>
+                                    <Th>{isMobile ? "За мес." : "За месяц"}</Th>
                                     <Th>Ед. изм</Th>
                                 </Tr>
                                 </Thead>
@@ -90,8 +94,8 @@ const IndicationModal = ({isOpen, onClose, indication}) => {
                                 {Object.values(indication)[0].map( item => ((
                                     <Tr key={item.id}>
                                          <Td>{item.device_id.device_name}</Td>
-                                         <Td isNumeric>{item.value}</Td>
-                                         <Td isNumeric>{item.monthly_change || 0 }</Td>
+                                         <Td>{item.value}</Td>
+                                         <Td>{item.monthly_change || 0 }</Td>
                                          <Td>{item.device_id.device_type_id.units}</Td>
                                      </Tr>
                                 )))}

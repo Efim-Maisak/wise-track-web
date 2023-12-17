@@ -42,8 +42,7 @@ const BarChart = ({chartData, devices}) => {
                         {item.datasets[0].label}, {devices[index].device_type_id.units}, за месяц
                         </Text>
                         <Bar
-                        w="600"
-                        h="400"
+                        h="400px"
                         data={item}
                         options={barOptions}/>
                     </Box>

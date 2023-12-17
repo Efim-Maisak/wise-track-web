@@ -8,10 +8,10 @@ const NotFoundPage = () => {
 
     return (
         <Box w="100%">
-            <Flex h="80vh" flexDirection="row" justifyContent="center" alignContent="center">
+            <Flex h="80vh" flexDirection={{base: "column", sm: "column", md: "row"}} justifyContent="center" alignContent="center">
                 <Heading
                 as="h2"
-                pr={8}
+                pr={{base: "0", sm: "0", md: "20px"}}
                 size="4xl"
                 bgGradient="linear(to-r, teal.400, teal.600)"
                 backgroundClip="text"

@@ -18,17 +18,18 @@ import {
   } from '@chakra-ui/react'
 
   import supabaseService from '../../services/supabaseService';
+  import { useAuth } from "../../hooks/useAuth";
+
 
   const AddObjectModal = ({isOpen, onClose, objectIsAdded, setObjectIsAdded}) => {
+
+    const user = useAuth();
+    const toast = useToast();
+    const { postObjects } = supabaseService();
 
     const [objectInput, setObjectInput] = useState("");
     const [inputError, setInputError] = useState(false);
 
-    const toast = useToast();
-
-    const { postObjects } = supabaseService();
-
-    const userId = "c8ab3e1f-9ee1-43fc-9db0-0cf77878e5f8"; // временное решение
 
     const postUserObject = (objectName, userId) => {
       try {
@@ -97,7 +98,7 @@ import {
               isDisabled={!objectInput}
               onClick={() => {
                 onClose();
-                postUserObject(objectInput, userId);
+                postUserObject(objectInput, user.id);
                 }}>
                 Добавить
               </Button>

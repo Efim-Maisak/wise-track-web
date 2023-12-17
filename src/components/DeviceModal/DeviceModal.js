@@ -106,9 +106,13 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
                     </Flex>
                 </ModalHeader>
                 <ModalBody>
-                    <Flex justifyContent="space-around">
-                        <Image boxSize="220px"src={device.device_type_id.image_url} alt="meter-device"/>
-                        <Box p={4}>
+                    <Flex flexDirection={{base: "column", sm: "column", md: "row"}} justifyContent="space-around" alignItems="center">
+                        <Image
+                        boxSize={{base: "120px", sm: "140px", md: "220px"}}
+                        src={device.device_type_id.image_url}
+                        alt="meter-device"
+                        />
+                        <Box p={{base: "8px", sm: "8px", md: "16px"}}>
                             <Stack spacing={2}>
                                 <Text as="h6" fontWeight="500" color="gray.700">Прибор измерения:</Text>
                                 <Text color="gray.700">{device.device_type_id.type_name}</Text>

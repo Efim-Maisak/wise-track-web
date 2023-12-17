@@ -16,11 +16,15 @@ import { Box,
         Td,
         TableContainer
         } from "@chakra-ui/react";
+import { useMediaQuery } from "@chakra-ui/react";
 import { formatDate } from "../../utils/formatDate";
 import supabaseService from "../../services/supabaseService";
+import "./lastIndications.css";
 
 
 const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
+
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const dateOptions = {
         day: 'numeric',
@@ -65,8 +69,17 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
 
     return (
         <>
-            <Box as="section" mt={8} p="4" w="620px" boxShadow="lg" borderRadius="8px" bg="white">
-                <Heading as="h3" pb={4} size="md">Последние переданные показания</Heading>
+            <Box
+            as="section"
+            mt={8}
+            p={{ base: "4px", sm: "8px", md: "16px"}}
+            maxW="620px"
+            w="100%"
+            boxShadow="lg"
+            borderRadius="8px"
+            bg="white"
+            >
+                <Heading as="h3" pb={4} size={{ base: "sm", sm: "sm", md: "md"}}>Последние переданные показания</Heading>
                 <Flex>
                     {lastIndications.length === 0
                     ?
@@ -76,7 +89,7 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
                         <AccordionItem border="none">
                             <h2>
                             <AccordionButton px="0" _hover={{}}>
-                                <Box as="span" flex='1' textAlign='left'>
+                                <Box as="span" flex='1' pl="6px" textAlign="left">
                                 {lastIndicationDate}
                                 </Box>
                                 <AccordionIcon/>
@@ -85,12 +98,12 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
                             <AccordionPanel px="0">
                                 <Box>
                                     <TableContainer>
-                                        <Table size='md'>
+                                        <Table size={{base: "sm", sm: "sm", md: "md"}} className="table-tiny">
                                             <Thead>
                                             <Tr>
                                                 <Th>Прибор учета</Th>
-                                                <Th>Показания</Th>
-                                                <Th>За месяц</Th>
+                                                <Th>{isMobile ? "Показ." : "Показания"}</Th>
+                                                <Th>{isMobile ? "За мес." : "За месяц"}</Th>
                                                 <Th>Ед. изм</Th>
                                             </Tr>
                                             </Thead>
@@ -98,8 +111,8 @@ const LastIndications = ({selectedObjectId, indicationsIsAdded}) => {
                                                 {lastIndications && lastIndications.map( indication =>
                                                     ((<Tr key={indication.id}>
                                                         <Td>{indication.device_id.device_name}</Td>
-                                                        <Td isNumeric>{indication.value}</Td>
-                                                        <Td isNumeric>{indication.monthly_change}</Td>
+                                                        <Td>{indication.value}</Td>
+                                                        <Td>{indication.monthly_change}</Td>
                                                         <Td>{indication.device_id.device_type_id.units}</Td>
                                                     </Tr>))
                                                 )}

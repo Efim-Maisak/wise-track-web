@@ -77,9 +77,16 @@ const IndicationsFilter = ({setFilteredIndications, indications, filteredIndicat
 
     return (
         <>
-            <Box as="section" w="620px" boxShadow="lg" borderRadius={8} bg="white">
-                <HStack p={4}>
-                    <InputGroup>
+            <Box
+            as="section"
+            maxW="620px"
+            w="100%"
+            boxShadow="lg"
+            borderRadius={8}
+            bg="white"
+            >
+                <HStack p={4} flexDirection={{ base: "column", sm: "column", md: "row"}}>
+                    <InputGroup  w="100%">
                         <InputLeftElement pointerEvents='none'>
                         <Search2Icon color='gray.400'/>
                         </InputLeftElement>
@@ -96,7 +103,7 @@ const IndicationsFilter = ({setFilteredIndications, indications, filteredIndicat
                         />
                     </InputGroup>
                     <Select
-                    maxW="220px"
+                    w={{ base: "100%", sm: "100%", md: "200px"}}
                     size="md"
                     variant="outline"
                     focusBorderColor="teal.600"

@@ -8,6 +8,14 @@ export const customTheme = extendTheme({
     warning: "#FFD54F",
     danger: "#FF1744"
   },
+  breakpoints: {
+    base: "0px",
+    sm: "320px",
+    md: "768px",
+    lg: "960px",
+    xl: "1200px",
+    "2xl": "1536px",
+  },
   components: {
     Popover: {
       variants: {
@@ -16,5 +24,12 @@ export const customTheme = extendTheme({
         },
       },
     },
+      Modal: {
+        baseStyle: {
+          dialogContainer: {
+            px: 2
+        },
+      },
+    }
   }
 })
