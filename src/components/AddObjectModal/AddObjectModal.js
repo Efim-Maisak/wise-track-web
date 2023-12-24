@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import {
     Modal,
     ModalOverlay,
@@ -16,14 +15,21 @@ import {
     Input,
     useToast
   } from '@chakra-ui/react'
-
   import supabaseService from '../../services/supabaseService';
   import { useAuth } from "../../hooks/useAuth";
 
 
-  const AddObjectModal = ({isOpen, onClose, objectIsAdded, setObjectIsAdded}) => {
+  const AddObjectModal = ({isOpen,
+                          onClose,
+                          objectIsAdded,
+                          setObjectIsAdded,
+                          setSelectedObjectId,
+                          setSelectedObject,
+                          setObjectIdToStorage,
+                          setObjectToStorage
+                          }) => {
 
-    const user = useAuth();
+    const { user } = useAuth();
     const toast = useToast();
     const { postObjects } = supabaseService();
 
@@ -44,6 +50,12 @@ import {
                   isClosable: true
                   });
               } else {
+                console.log(res);
+                setSelectedObjectId(res.object[0].id);
+                setSelectedObject(res.object[0].object_name);
+                setObjectIdToStorage(res.object[0].id);
+                setObjectToStorage(res.object[0].object_name);
+                setObjectIsAdded(!objectIsAdded);
                 toast({
                   description: "Новый объект добавлен",
                   status: 'success',
@@ -55,11 +67,9 @@ import {
           }
         } catch(e) {
         throw new Error(e.message);
-
       }
         setObjectInput("");
         setInputError(false);
-        setObjectIsAdded(!objectIsAdded);
     };
 
     const onObjectInputChange = (e) => {

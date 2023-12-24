@@ -9,7 +9,8 @@ import {
     Button,
     Heading,
     Text,
-    useToast
+    useToast,
+    useMediaQuery
   } from "@chakra-ui/react"
   import supabase from "../../config/supabaseClient";
   import { mailValidation } from "../../utils/mailValidation";
@@ -18,6 +19,7 @@ import {
 const PasswordRecoveryPage = () => {
 
     const toast = useToast();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     let emailRef = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -87,7 +89,8 @@ const PasswordRecoveryPage = () => {
                     rounded={'lg'}
                     bg='white'
                     boxShadow={'lg'}
-                    p={8}>
+                    p={isMobile ? 6 : 8 }
+                    >
                     <Stack spacing={4}>
                         <Text color="gray.400">Введите действительный адрес электронной почты.</Text>
                         <Text color="gray.400">На почту будет направлено письмо для восстановления пароля.</Text>

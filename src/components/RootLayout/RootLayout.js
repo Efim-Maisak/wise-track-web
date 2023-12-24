@@ -20,10 +20,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 import logo from "../../images/wisetrack-logo-250-50.png";
 
+
 const RootLayout = ({children}) => {
 
     const {user, signOut} = useAuth();
     const navigate = useNavigate();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const location = useLocation();
     const path = location.pathname;
@@ -35,7 +37,7 @@ const RootLayout = ({children}) => {
         navigate("/login");
     };
 
-    const [isMobile] = useMediaQuery("(max-width: 768px)");
+    const isProtectedRoute = path === "/" || path === "/history" || path === "/statistics";
 
     const header = isMobile
     ?
@@ -75,9 +77,22 @@ const RootLayout = ({children}) => {
     <Header h="40px"/>
     );
 
+    const navigationMenu = isProtectedRoute ?
+    (
+    <NavigationMenu
+        w="100%"
+        pos="fixed"
+        bottom="0"
+        zIndex={2}
+    />
+    )
+    :
+    null;
+
+
     return(
         <>
-            {path === "/" || path === "/history" || path === "/statistics"
+            {isProtectedRoute
             ?
             header
             :
@@ -89,7 +104,7 @@ const RootLayout = ({children}) => {
             {
             isMobile
             ?
-            <NavigationMenu w="100%" pos="fixed" bottom="0" zIndex={2}/>
+            navigationMenu
             :
             null
             }

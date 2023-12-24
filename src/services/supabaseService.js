@@ -20,11 +20,12 @@ const supabaseService = () => {
         };
 
     const postObjects = async (objectName, userId) => {
-        let { error } = await supabase
+        let { data: object , error } = await supabase
         .from('objects')
-        .insert({ object_name: objectName, users_id: [ userId ] });
+        .insert({ object_name: objectName, users_id: [ userId ] })
+        .select();
 
-        return { error };
+        return { object, error };
     };
 
     const deleteObject = async (objectId) => {

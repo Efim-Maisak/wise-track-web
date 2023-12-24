@@ -14,9 +14,9 @@ import { Box,
         Tr,
         Th,
         Td,
-        TableContainer
+        TableContainer,
+        useMediaQuery
         } from "@chakra-ui/react";
-import { useMediaQuery } from "@chakra-ui/react";
 import { formatDate } from "../../utils/formatDate";
 import supabaseService from "../../services/supabaseService";
 import "./lastIndications.css";

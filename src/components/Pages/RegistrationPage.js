@@ -15,7 +15,8 @@ import {
     Link as ChackraLink,
     Divider,
     AbsoluteCenter,
-    useToast
+    useToast,
+    useMediaQuery
   } from "@chakra-ui/react"
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
@@ -23,13 +24,14 @@ import { FcGoogle } from "react-icons/fc";
 import supabase from "../../config/supabaseClient";
 import { mailValidation } from "../../utils/mailValidation";
 import { passwordValidation } from "../../utils/passwordValidation";
-import city from "../../images/city.png"
+import logo from "../../images/wisetrack-logo-250-50.png";
 
 
 const RegistrationPage = () => {
 
     const toast = useToast();
     const navigate = useNavigate();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     let emailRef = useRef(null);
     let passwordRef = useRef(null);
@@ -115,17 +117,32 @@ const RegistrationPage = () => {
             justify={'center'}
             bg="gray.50"
             >
-                <Flex flexDirection="row" justifyContent="center">
+                <Flex
+                flexDirection={isMobile ? "column" : "row"}
+                justifyContent="center"
+                alignItems="center"
+                >
+                <Box
+                px={isMobile ? 0 : 8 }
+                maxW={isMobile ? "sm" : "md"}
+                display="flex"
+                alignItems="center"
+                >
                     <Image
-                    src={city}
-                    fit="cover"
-                    w={'md'}
-                    boxShadow={'lg'}
-                    rounded={'lg'}
+                    src={logo}
+                    objectFit="contain"
+                    my="30px"
                     />
-                    <Stack spacing={8} mx={'auto'} w={'md'} py={12} px={6}>
+                    </Box>
+                    <Stack
+                    spacing={8}
+                    mx="auto"
+                    w={isMobile ? "xs" : "md"}
+                    py={12} px={isMobile ? 4 : 6 }
+                    my={isMobile ? "0" : "30px"}
+                    >
                         <Stack align={'center'}>
-                        <Heading fontSize={'4xl'} textAlign={'center'}>
+                        <Heading fontSize={isMobile ? "2xl" : "4xl"} textAlign={'center'}>
                             Регистрация
                         </Heading>
                         </Stack>
@@ -133,7 +150,8 @@ const RegistrationPage = () => {
                         rounded={'lg'}
                         bg="white"
                         boxShadow={'lg'}
-                        p={8}>
+                        p={isMobile ? 6 : 8 }
+                        >
                         <Stack spacing={4}>
                             <Button
                                 isLoading={loading}

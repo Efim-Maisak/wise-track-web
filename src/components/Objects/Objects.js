@@ -61,10 +61,26 @@ const Objects = () => {
 
     const fetchUserObjects = async () => {
         try {
+            let response = {};
             setObjectsLoading(true);
             await getObjects(user.id)
-            .then( res => setObjects(res.objects));
+            .then( res => {
+                setObjects(res.objects);
+                response = res.objects;
+                 if(objectIdToStorage === "") {
+                    // подтянуть id первого объекта в localStorage, если там пусто
+                    console.log(res.objects);
+                    if(res.objects.length > 0) {
+                        setObjectIdToStorage(res.objects[0]?.id);
+                        setObjectToStorage(res.objects[0]?.object_name);
+                        setSelectedObject(res.objects[0]?.object_name);
+                        setSelectedObjectId(res.objects[0]?.id);
+                        fetchUserDevices(res.objects[0]?.id);
+                    }
+               };
+            });
             setObjectsLoading(false);
+            return response;
         } catch(e) {
             throw new Error(e.message);
         }
@@ -112,29 +128,46 @@ const Objects = () => {
     }, []);
 
     useEffect(() => {
-        setSelectedObject(objectToStorage);
         fetchUserDevices(objectIdToStorage);
     }, [selectedObject]);
 
     useEffect(() => {
         // условие для предотвращения срабатывания эффекта при первом рендере
-        if (prevObjectIsAdded.current !== objectIsAdded || prevObjectIsDeleted.current !== objectIsDeleted) {
+
+        if (prevObjectIsAdded.current !== objectIsAdded) {
+            console.log("useEffect triggered by objectIsAdded:", objectIsAdded);
             fetchUserObjects();
-        }
+        };
+
+        if (prevObjectIsDeleted.current !== objectIsDeleted) {
+            console.log("useEffect triggered by objectDeleted:", objectIsDeleted);
+            fetchUserObjects().then( objects => {
+                console.log(objects);
+                setSelectedObject(objects[objects.length - 1].object_name);
+                setSelectedObjectId(objects[objects.length - 1].id);
+                setObjectIdToStorage(objects[objects.length - 1].id);
+                setObjectToStorage(objects[objects.length - 1].object_name);
+            });
+        };
+
         prevObjectIsAdded.current = objectIsAdded;
         prevObjectIsDeleted.current = objectIsDeleted;
     }, [objectIsAdded, objectIsDeleted]);
 
     useEffect(() => {
         if (prevDeviceIsAdded.current !== deviceIsAdded || prevDeviceIsDeleted.current !== deviceIsDeleted) {
+
             fetchUserDevices(selectedObjectId);
         }
         prevDeviceIsAdded.current = deviceIsAdded;
         prevDeviceIsDeleted.current = deviceIsDeleted;
     }, [deviceIsAdded, deviceIsDeleted]);
 
+
     return (
         <>
+            {console.log("Стейт: ", objects)}
+            {console.log("Selected: ", selectedObjectId)}
             {
             !objectsLoading
             ?
@@ -165,12 +198,18 @@ const Objects = () => {
             <AddObjectModal
             objectIsAdded={objectIsAdded}
             setObjectIsAdded={setObjectIsAdded}
+            setSelectedObjectId={setSelectedObjectId}
+            setSelectedObject={setSelectedObject}
+            setObjectIdToStorage={setObjectIdToStorage}
+            setObjectToStorage={setObjectToStorage}
             isOpen={isOpenAddModal}
             onClose={onCloseAddModal}
             />
             <DeleteObjectModal
             objectIsDeleted={objectIsDeleted}
             setObjectIsDeteted={setObjectIsDeteted}
+            fetchUserObjects={fetchUserObjects}
+            fetchUserDevices={fetchUserDevices}
             objects={objects}
             isOpen={isOpenDeleteModal}
             onClose={onCloseDeleteModal}

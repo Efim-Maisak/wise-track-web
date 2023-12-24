@@ -26,10 +26,16 @@ import {
   import supabaseService from "../../services/supabaseService";
 
 
-const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObjectIsDeteted}) => {
+const DeleteObjectModal = ({isOpen,
+                            onClose,
+                            objects,
+                            objectIsDeleted,
+                            setObjectIsDeteted
+                            }) => {
 
     const toast = useToast();
     const { deleteObject } = supabaseService();
+
 
     const removeObject = async (objectId) => {
         try {
@@ -91,7 +97,12 @@ const DeleteObjectModal = ({isOpen, onClose, objects, objectIsDeleted, setObject
                                         <PopoverBody>
                                             <Flex justifyContent="space-between" alignItems="center">
                                                 <Text pr={4} fontWeight="bold">Удалить безвозвратно?</Text>
-                                                <Button size="sm" colorScheme='red' onClick={() => {removeObject(obj.id)}}>Да</Button>
+                                                <Button
+                                                size="sm"
+                                                colorScheme="red"
+                                                onClick={() => {removeObject(obj.id)}}>
+                                                    Да
+                                                </Button>
                                             </Flex>
                                         </PopoverBody>
                                     </PopoverContent>

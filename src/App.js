@@ -13,7 +13,6 @@ import NotFoundPage from "./components/Pages/NotFoundPage";
 
 
 function App() {
-
   return (
     <div className="App" >
         <RootLayout>

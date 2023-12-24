@@ -9,7 +9,8 @@ import {
     Button,
     Heading,
     Text,
-    useToast
+    useToast,
+    useMediaQuery
   } from "@chakra-ui/react"
   import { useNavigate } from "react-router-dom";
   import supabase from "../../config/supabaseClient";
@@ -18,6 +19,8 @@ import {
 
     const toast = useToast();
     const navigate =  useNavigate();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
+
 
     let passwordRef = useRef(null);
     let passwordConfirmRef = useRef(null);
@@ -85,7 +88,8 @@ import {
                     rounded={'lg'}
                     bg='white'
                     boxShadow={'lg'}
-                    p={8}>
+                    p={isMobile ? 6 : 8 }
+                    >
                     <Stack spacing={4}>
                         <Text color="gray.400">Придумайте новый пароль</Text>
                         <FormControl mt={4} id="password" isRequired>

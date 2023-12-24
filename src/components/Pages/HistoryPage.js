@@ -3,9 +3,7 @@ import { Container, Flex, Spinner, Box, Text } from "@chakra-ui/react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import IndicationsList from "../IndicationsList/IndicationsList";
 import IndicationsFilter from "../IndicationsFilter/IndicationsFilter";
-
 import supabaseService from "../../services/supabaseService";
-
 
 
 const HistoryPage = () => {

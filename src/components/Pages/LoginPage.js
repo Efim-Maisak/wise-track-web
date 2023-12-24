@@ -15,7 +15,8 @@ import {
     AbsoluteCenter,
     Image,
     Link as ChackraLink,
-    useToast
+    useToast,
+    useMediaQuery
   } from "@chakra-ui/react"
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { FcGoogle } from "react-icons/fc";
@@ -23,11 +24,12 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import supabase from "../../config/supabaseClient";
 import { mailValidation } from "../../utils/mailValidation";
 import { passwordValidation } from "../../utils/passwordValidation";
-import bath from "../../images/bath.png";
+import logo from "../../images/wisetrack-logo-250-50.png";
 
 
 const LoginPage = () => {
 
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
     const toast = useToast();
     const navigate = useNavigate();
 
@@ -108,25 +110,40 @@ const LoginPage = () => {
         }
     }
 
+
     return (
         <>
             <Flex
-            minH={'100vh'}
-            align={'center'}
-            justify={'center'}
+            minH={"100vh"}
+            align={"center"}
+            justify={"center"}
             bg="gray.50"
             >
-                <Flex flexDirection="row" justifyContent="center">
-                    <Image
-                    src={bath}
-                    fit="cover"
-                    w={'md'}
-                    boxShadow={'lg'}
-                    rounded={'lg'}
-                    />
-                    <Stack spacing={8} mx={'auto'} w={'md'} py={12} px={6}>
-                        <Stack align={'center'}>
-                        <Heading fontSize={'4xl'} textAlign={'center'}>
+                <Flex
+                flexDirection={isMobile ? "column" : "row"}
+                justifyContent="center"
+                alignItems="center">
+                    <Box
+                    px={isMobile ? 0 : 8 }
+                    maxW={isMobile ? "sm" : "md"}
+                    display="flex"
+                    alignItems="center">
+                        <Image
+                        src={logo}
+                        objectFit="contain"
+                        my="30px"
+                        />
+                    </Box>
+                    <Stack
+                    spacing={8}
+                    mx="auto"
+                    w={isMobile ? "xs" : "md"}
+                    py={12}
+                    px={isMobile ? 4 : 6 }
+                    my={isMobile ? "0" : "30px"}
+                    >
+                        <Stack align={"center"}>
+                        <Heading fontSize={isMobile ? "2xl" : "4xl"} textAlign={'center'}>
                             Вход
                         </Heading>
                         </Stack>
@@ -134,7 +151,8 @@ const LoginPage = () => {
                         rounded={'lg'}
                         bg="white"
                         boxShadow={'lg'}
-                        p={8}>
+                        p={isMobile ? 6 : 8 }
+                        >
                         <Stack spacing={4}>
                             <Button
                                 isLoading={loading}
