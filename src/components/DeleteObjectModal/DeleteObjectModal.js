@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
     Modal,
     ModalOverlay,
@@ -21,7 +20,6 @@ import {
     PopoverBody,
     useToast
   } from '@chakra-ui/react';
-
   import { DeleteIcon } from '@chakra-ui/icons';
   import supabaseService from "../../services/supabaseService";
 

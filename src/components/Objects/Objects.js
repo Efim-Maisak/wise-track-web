@@ -69,7 +69,6 @@ const Objects = () => {
                 response = res.objects;
                  if(objectIdToStorage === "") {
                     // подтянуть id первого объекта в localStorage, если там пусто
-                    console.log(res.objects);
                     if(res.objects.length > 0) {
                         setObjectIdToStorage(res.objects[0]?.id);
                         setObjectToStorage(res.objects[0]?.object_name);
@@ -133,20 +132,25 @@ const Objects = () => {
 
     useEffect(() => {
         // условие для предотвращения срабатывания эффекта при первом рендере
-
         if (prevObjectIsAdded.current !== objectIsAdded) {
-            console.log("useEffect triggered by objectIsAdded:", objectIsAdded);
             fetchUserObjects();
         };
 
+        // запись в local storage и стейт selectedObject - нужно для загрузки devices после удаления объекта
         if (prevObjectIsDeleted.current !== objectIsDeleted) {
-            console.log("useEffect triggered by objectDeleted:", objectIsDeleted);
             fetchUserObjects().then( objects => {
-                console.log(objects);
-                setSelectedObject(objects[objects.length - 1].object_name);
-                setSelectedObjectId(objects[objects.length - 1].id);
-                setObjectIdToStorage(objects[objects.length - 1].id);
-                setObjectToStorage(objects[objects.length - 1].object_name);
+                if(objects.length > 0) {
+                    setSelectedObject(objects[objects.length - 1].object_name);
+                    setSelectedObjectId(objects[objects.length - 1].id);
+                    setObjectIdToStorage(objects[objects.length - 1].id);
+                    setObjectToStorage(objects[objects.length - 1].object_name);
+                } else {
+                    setSelectedObject("");
+                    setSelectedObjectId("");
+                    setObjectIdToStorage("");
+                    setObjectToStorage("");
+                    setDevices(null);
+                }
             });
         };
 
@@ -166,8 +170,6 @@ const Objects = () => {
 
     return (
         <>
-            {console.log("Стейт: ", objects)}
-            {console.log("Selected: ", selectedObjectId)}
             {
             !objectsLoading
             ?

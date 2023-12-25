@@ -50,7 +50,6 @@ import {
                   isClosable: true
                   });
               } else {
-                console.log(res);
                 setSelectedObjectId(res.object[0].id);
                 setSelectedObject(res.object[0].object_name);
                 setObjectIdToStorage(res.object[0].id);
