@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
     Box,
     Modal,
@@ -18,13 +17,14 @@ import {
     Text,
     useToast,
     Spacer,
+    useMediaQuery
   } from '@chakra-ui/react'
-
-  import supabaseService from "../../services/supabaseService";
+import supabaseService from "../../services/supabaseService";
 
 
   const RecordReadingsModal = ({isOpen, onClose, indicationsIsAdded, setIndicationsIsAdded, devices}) => {
 
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
     const [inputs, setInputs] = useState(null);
     const [monthInput, setMonthInput] = useState("");
     const [inputError, setInputError] = useState({});
@@ -32,6 +32,7 @@ import {
     const [globalInputError, setGlobalInputError] = useState(true);
 
     const { postIndications } = supabaseService();
+
     const toast = useToast();
 
     function createStateObj(devicesArr) {
@@ -104,7 +105,6 @@ import {
             monthInputClone[key].billing_period = monthInputState;
             data.push(monthInputClone[key]);
         }
-
         return data;
     };
 
@@ -126,16 +126,18 @@ import {
                 await postIndications(composeData(inputs, monthInput)).then(res => {
                     if(res.error?.message) {
                         toast({
+                          position: isMobile ? "top" : "bottom",
                           description: `Ошибка: ${res.error.message}`,
-                          status: 'error',
-                          duration: 5000,
+                          status: "error",
+                          duration: 3000,
                           isClosable: true
                           });
                       } else {
                         toast({
+                          position: isMobile ? "top" : "bottom",
                           description: "Показания записаны",
                           status: 'success',
-                          duration: 5000,
+                          duration: 3000,
                           isClosable: true
                         });
                         setIndicationsIsAdded(!indicationsIsAdded);
@@ -144,10 +146,10 @@ import {
             } catch(e) {
                 throw new Error(e.message);
             }
-                clearInputsValues(inputs);
-                setMonthInputError(true);
-                resetInputsErrors(inputError);
-                setGlobalInputError(true);
+            clearInputsValues(inputs);
+            setMonthInputError(true);
+            resetInputsErrors(inputError);
+            setGlobalInputError(true);
         }
     }
 

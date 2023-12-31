@@ -53,7 +53,7 @@ const RootLayout = ({children}) => {
             <MenuButton
                 as={IconButton}
                 aria-label="mobile-menu"
-                icon={<SlMenu/>}
+                icon={<SlMenu fontSize="20px"/>}
                 variant="solid"
                 mr="10px"
                 bg="gray.50"

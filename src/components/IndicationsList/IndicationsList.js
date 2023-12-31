@@ -5,7 +5,8 @@ import {Box,
         Text,
         Icon,
         StackDivider,
-        useDisclosure
+        useDisclosure,
+        useMediaQuery
         } from "@chakra-ui/react";
 import { FaAngleRight } from "react-icons/fa6";
 import IndicationModal from "../IndicationModal/IndicationModal";
@@ -14,8 +15,10 @@ import IndicationModal from "../IndicationModal/IndicationModal";
 const IndicationsList = ({indications}) => {
 
     const {isOpen, onOpen, onClose} = useDisclosure();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const [indication, setIndication] = useState(null);
+
 
     const pickIndicationForModal = (indicationsArr, index) => {
         const indicationItem = indicationsArr[index]
@@ -42,7 +45,7 @@ const IndicationsList = ({indications}) => {
             boxShadow="lg"
             borderRadius={8}
             bg="white"
-            mt={16}
+            mt={isMobile ? "32px" : "64px"}
             >
                 <Stack
                 divider={<StackDivider borderColor="gray.200"/>}

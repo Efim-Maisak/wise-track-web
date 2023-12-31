@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Container, Flex, Spinner, Box, Text } from "@chakra-ui/react";
+import { Container, Flex, Spinner, Box, Text, useMediaQuery } from "@chakra-ui/react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import IndicationsList from "../IndicationsList/IndicationsList";
 import IndicationsFilter from "../IndicationsFilter/IndicationsFilter";
 import supabaseService from "../../services/supabaseService";
 
 
+
 const HistoryPage = () => {
+
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const [ objectIdFromStorage, setObjectIdFromStorage ] = useLocalStorage("", "selectedObjectId");
 
@@ -102,8 +105,8 @@ const HistoryPage = () => {
     return (
         <>
         <Flex w="100%" minH="100vh" bg="gray.50">
-            <Container maxW='4xl' as="div" p="0" px="10px">
-                <Flex mt={16} justifyContent="center">
+            <Container maxW='4xl' as="div" p="0" px="14px">
+                <Flex mt={isMobile ? "32px" : "64px"} justifyContent="center">
                     <IndicationsFilter
                     maxW="100%"
                     setFilteredIndications={setFilteredIndications}

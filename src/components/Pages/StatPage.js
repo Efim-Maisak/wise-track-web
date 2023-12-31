@@ -7,7 +7,8 @@ import { Container,
         MenuButton,
         MenuList,
         MenuItem,
-        Spinner
+        Spinner,
+        useMediaQuery
         } from "@chakra-ui/react";
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import BarChart from "../BarChart/BarChart";
@@ -31,6 +32,7 @@ const StatPage = () => {
     const [selectedYear, setSelectedYear] = useState("");
 
     const { getDevices, getIndications } = supabaseService();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
 
     const createYearOptions = (indicationsArr) => {
@@ -196,11 +198,12 @@ const StatPage = () => {
     return (
         <>
             <Flex w="100%" minH="100vh" bg="gray.50">
-                <Container as="div" maxW='4xl' p="0" px="10px">
+                <Container as="div" maxW='4xl' p="0" px="14px">
                     <Box
                     maxW="620px"
                     w="100%"
-                    pt={16} margin="auto"
+                    pt={isMobile ? "32px" : "64px"}
+                    margin="auto"
                     display={indications.length === 0 ? "none" : "block"}
                     >
                         <Flex justifyContent="flex-end">

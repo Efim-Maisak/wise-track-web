@@ -113,6 +113,8 @@ const Objects = () => {
 
     useEffect(() => {
         if(user.id !== lastloginedUser) {
+            setObjectToStorage("");
+            setObjectIdToStorage("");
             setSelectedObjectId(null);
             setSelectedObject(null);
             setObjects(null);

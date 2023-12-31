@@ -18,10 +18,11 @@ import {
     PopoverContent,
     PopoverArrow,
     PopoverBody,
-    useToast
+    useToast,
+    useMediaQuery
   } from '@chakra-ui/react';
-  import { DeleteIcon } from '@chakra-ui/icons';
-  import supabaseService from "../../services/supabaseService";
+import { DeleteIcon } from '@chakra-ui/icons';
+import supabaseService from "../../services/supabaseService";
 
 
 const DeleteObjectModal = ({isOpen,
@@ -31,6 +32,7 @@ const DeleteObjectModal = ({isOpen,
                             setObjectIsDeteted
                             }) => {
 
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
     const toast = useToast();
     const { deleteObject } = supabaseService();
 
@@ -41,9 +43,10 @@ const DeleteObjectModal = ({isOpen,
             .then(res => {
                 if(res.error?.message) {
                     toast({
+                        position: isMobile ? "top" : "bottom",
                         description: `Ошибка: ${res.error.message}`,
                         status: 'error',
-                        duration: 5000,
+                        duration: 3000,
                         isClosable: true
                         });
                 }

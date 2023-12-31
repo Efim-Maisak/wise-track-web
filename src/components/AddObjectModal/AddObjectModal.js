@@ -13,7 +13,8 @@ import {
     FormErrorMessage,
     FormHelperText,
     Input,
-    useToast
+    useToast,
+    useMediaQuery
   } from '@chakra-ui/react'
   import supabaseService from '../../services/supabaseService';
   import { useAuth } from "../../hooks/useAuth";
@@ -31,6 +32,7 @@ import {
 
     const { user } = useAuth();
     const toast = useToast();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
     const { postObjects } = supabaseService();
 
     const [objectInput, setObjectInput] = useState("");
@@ -44,9 +46,10 @@ import {
             .then( res => {
               if(res.error?.message) {
                 toast({
+                  position: isMobile ? "top" : "bottom",
                   description: `Ошибка: ${res.error.message}`,
                   status: 'error',
-                  duration: 5000,
+                  duration: 3000,
                   isClosable: true
                   });
               } else {
@@ -56,9 +59,10 @@ import {
                 setObjectToStorage(res.object[0].object_name);
                 setObjectIsAdded(!objectIsAdded);
                 toast({
+                  position: isMobile ? "top" : "bottom",
                   description: "Новый объект добавлен",
                   status: 'success',
-                  duration: 5000,
+                  duration: 3000,
                   isClosable: true
                 });
               }

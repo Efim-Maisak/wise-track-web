@@ -17,7 +17,8 @@ import {
     IconButton,
     Image,
     useToast,
-    Stack
+    Stack,
+    useMediaQuery
   } from '@chakra-ui/react';
   import { BsThreeDotsVertical } from "react-icons/bs";
   import { DeleteIcon } from '@chakra-ui/icons';
@@ -28,6 +29,7 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
 
     const { deleteDevice, getLastIndicationFromDevice } = supabaseService();
     const toast = useToast();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const [deviceLastValue, setDeviceLastValue] = useState("");
 
@@ -47,16 +49,18 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
             .then(res => {
                 if(res.error?.message) {
                     toast({
+                        position: isMobile ? "top" : "bottom",
                         description: `Ошибка: ${res.error.message}`,
                         status: 'error',
-                        duration: 5000,
+                        duration: 3000,
                         isClosable: true
                         });
                 } else {
                     toast({
+                        position: isMobile ? "top" : "bottom",
                         description: `Прибор "${device.device_name}" удален`,
                         status: 'success',
-                        duration: 5000,
+                        duration: 3000,
                         isClosable: true
                       });
 

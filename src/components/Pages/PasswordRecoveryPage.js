@@ -37,20 +37,20 @@ const PasswordRecoveryPage = () => {
             try {
                 setLoading(true);
                 const { error } = await supabase.auth.resetPasswordForEmail(emailRef.current.value, {
-                    redirectTo: 'http://localhost:3000/change-pass'
+                    redirectTo: "https://wisetrack.netlify.app/change-pass"
                 });
                 if(error?.message) {
                     toast({
                         description: `Ошибка: ${error.message}`,
-                        status: 'error',
-                        duration: 5000,
+                        status: "error",
+                        duration: 3000,
                         isClosable: true
                         });
                 } else {
                     toast({
                         description: "Письмо для восстановления пароля отправлено",
-                        status: 'success',
-                        duration: 5000,
+                        status: "success",
+                        duration: 3000,
                         isClosable: true
                       });
                 }

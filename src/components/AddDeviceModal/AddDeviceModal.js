@@ -15,7 +15,8 @@ import {
     FormHelperText,
     Select,
     Input,
-    useToast
+    useToast,
+    useMediaQuery
   } from '@chakra-ui/react'
 
   import supabaseService from "../../services/supabaseService";
@@ -30,6 +31,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
 
     const { getDevicesTypes, postDevices } = supabaseService();
     const toast = useToast();
+    const [isMobile] = useMediaQuery("(max-width: 768px)");
 
     const fetchDevicesTypes = async () => {
         try {
@@ -64,16 +66,18 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
                 await postDevices(objectId, deviceTypeId, deviceName).then(res => {
                     if(res.error?.message) {
                         toast({
+                          position: isMobile ? "top" : "bottom",
                           description: `Ошибка: ${res.error.message}`,
                           status: 'error',
-                          duration: 5000,
+                          duration: 3000,
                           isClosable: true
                           });
                       } else {
                         toast({
+                          position: isMobile ? "top" : "bottom",
                           description: "Новый прибор учета добавлен",
                           status: 'success',
-                          duration: 5000,
+                          duration: 3000,
                           isClosable: true
                         });
                       }
