@@ -12,11 +12,11 @@ import {
     Alert,
     AlertIcon,
     Spinner,
-    Tooltip,
-    Select
+    Button,
+    Text
     } from "@chakra-ui/react";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
+import { AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import Devices from "../Devices/Devices";
 import RecordReadings from "../RecordReadings/RecordReadings";
 import AddObjectModal from "../AddObjectModal/AddObjectModal";
@@ -102,13 +102,18 @@ const Objects = () => {
     };
 
     const onChangeSеlectValue = (e) => {
+        // setSelectedObject(e.target.value);
+        // setObjectToStorage(e.target.value);
+        // const index = e.target.selectedIndex;
+        // const optionElement = e.target.childNodes[index];
+        // const objId = optionElement.getAttribute("data-id");
+        // setSelectedObjectId(objId);
+        // setObjectIdToStorage(objId);
+
         setSelectedObject(e.target.value);
         setObjectToStorage(e.target.value);
-        const index = e.target.selectedIndex;
-        const optionElement = e.target.childNodes[index];
-        const objId = optionElement.getAttribute("data-id");
-        setSelectedObjectId(objId);
-        setObjectIdToStorage(objId);
+        setSelectedObjectId(e.target.dataset.id);
+        setObjectIdToStorage(e.target.dataset.id);
     };
 
     useEffect(() => {
@@ -272,27 +277,47 @@ const View = ({ selectedObject,
                  >
                     <Heading as="h3" size={{ base: "sm", sm: "sm", md: "md"}}>Мои объекты</Heading>
                     <Flex justifyContent="space-between" mt="4">
-                        <Tooltip bg="white" color="gray.600" label="Выбранный объект" openDelay="600">
-                            <Select
-                                maxW="480px"
-                                size="md"
+                        <Menu matchWidth>
+                            <MenuButton
+                                as={Button}
+                                w="100%"
                                 variant="filled"
-                                focusBorderColor="teal.600"
+                                bg="gray.100"
+                                _hover={{ bg: "gray.200" }}
+                                _expanded={{ bg: "gray.200" }}
                                 isDisabled={objects && objects.length > 0 ? false : true}
-                                value={selectedObject || ""}
-                                onChange={onChangeSеlectValue}
-                                >
-                                    {objects && objects.map(
-                                        obj => ((<option
-                                                    key={obj.id}
-                                                    value={obj.object_name === selectedObject ? obj.object_name : null}
-                                                    data-id={obj.id}
-                                                    >
-                                                    {obj.object_name}
-                                                </option>))
-                                        )}
-                                </Select>
-                        </Tooltip>
+                                rightIcon={<ChevronDownIcon />}
+                                textAlign="left"
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
+                                <Text fontWeight="400" noOfLines={1}>
+                                    {selectedObject || "Выберите объект"}
+                                </Text>
+                            </MenuButton>
+                            <MenuList>
+                                {objects && objects.map(obj => (
+                                    <MenuItem
+                                        key={obj.id}
+                                        backgroundColor={selectedObject === obj.object_name ? "gray.100" : "transparent"}
+                                        _hover={{ backgroundColor: "gray.300" }}
+                                        onClick={() => onChangeSеlectValue({
+                                            target: {
+                                                value: obj.object_name,
+                                                dataset: {
+                                                    id: obj.id
+                                                }
+                                            }
+                                        })}
+                                    >
+                                        <Text noOfLines={1}>
+                                            {obj.object_name}
+                                        </Text>
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
                         <Menu placement="bottom-end">
                         <MenuButton
                             as={IconButton}

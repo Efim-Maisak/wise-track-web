@@ -2,12 +2,17 @@ import React, { useState, useEffect} from "react";
 import {
     Box,
     HStack,
-    Select,
     InputGroup,
     InputLeftElement,
     Input,
+    Menu,
+    MenuList,
+    MenuButton,
+    MenuItem,
+    Button,
+    Text
     } from "@chakra-ui/react";
-import {Search2Icon} from "@chakra-ui/icons"
+import {Search2Icon, ChevronDownIcon } from "@chakra-ui/icons";
 
 
 const IndicationsFilter = ({setFilteredIndications, indications, filteredIndications, yearOptions}) => {
@@ -102,19 +107,56 @@ const IndicationsFilter = ({setFilteredIndications, indications, filteredIndicat
                         onChange={handleSearchInput}
                         />
                     </InputGroup>
-                    <Select
-                    w={{ base: "100%", sm: "100%", md: "200px"}}
-                    size="md"
-                    variant="outline"
-                    focusBorderColor="teal.600"
-                    placeholder="За все годы"
-                    value={yearSelect}
-                    onChange={handleYearSelect}
-                    >
-                        {yearOptions.map( year => ((
-                            <option key={year} value={year}>{year}</option>
-                        )))}
-                    </Select>
+                        <Menu matchWidth>
+                            <MenuButton
+                                as={Button}
+                                w={{ base: "100%", sm: "100%", md: "200px"}}
+                                variant="outline"
+                                bg="white"
+                                _hover={{ bg: "gray.200" }}
+                                _expanded={{ bg: "gray.200" }}
+                                rightIcon={<ChevronDownIcon />}
+                                textAlign="left"
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
+                                <Text fontWeight="400" noOfLines={1}>
+                                    {yearSelect || "За все годы"}
+                                </Text>
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem
+                                    backgroundColor={!yearSelect ? "gray.100" : "transparent"}
+                                    _hover={{ backgroundColor: "gray.300" }}
+                                    onClick={() => handleYearSelect({
+                                        target: {
+                                            value: "",
+                                        }
+                                    })}
+                                    >
+                                    <Text noOfLines={1}>
+                                        За все годы
+                                    </Text>
+                                </MenuItem>
+                                {yearOptions && yearOptions.map( year => (
+                                    <MenuItem
+                                        key={year}
+                                        backgroundColor={ yearSelect === year ? "gray.100" : "transparent"}
+                                        _hover={{ backgroundColor: "gray.300" }}
+                                        onClick={() => handleYearSelect({
+                                            target: {
+                                                value: year,
+                                            }
+                                        })}
+                                    >
+                                        <Text noOfLines={1}>
+                                            {year}
+                                        </Text>
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
                 </HStack>
             </Box>
         </>

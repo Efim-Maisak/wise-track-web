@@ -64,10 +64,16 @@ const RegistrationPage = () => {
                     toast({
                         description: `Ошибка: ${error.message}`,
                         status: 'error',
-                        duration: 5000,
+                        duration: 3000,
                         isClosable: true
                         });
                   } else {
+                    toast({
+                        description: `Письмо для подтверждения регистрации отправлено на почту ${emailRef.current.value}`,
+                        status: 'success',
+                        duration: 3000,
+                        isClosable: true
+                      });
                     setLoading(false);
                     const { user } = data;
                     if(user) navigate("/login");
@@ -80,7 +86,7 @@ const RegistrationPage = () => {
             toast({
                 description: Object.values(errorsMsg).join(", "),
                 status: 'error',
-                duration: 5000,
+                duration: 3000,
                 isClosable: true
                 });
             errorsMsg = {};

@@ -221,7 +221,14 @@ const StatPage = () => {
                             </MenuButton>
                             <MenuList minW="0">
                                 {yearOptions.map((year, i) => ((
-                                <MenuItem w="90px" key={i} value={year} onClick={handleSelectYear}>{year}</MenuItem>
+                                <MenuItem
+                                key={i}
+                                w="90px"
+                                value={year}
+                                backgroundColor={selectedYear === year ? "gray.100" : "transparent"}
+                                onClick={handleSelectYear}>
+                                    {year}
+                                </MenuItem>
                                 )))}
                             </MenuList>
                             </Menu>

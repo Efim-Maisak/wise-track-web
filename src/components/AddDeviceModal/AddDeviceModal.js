@@ -13,12 +13,16 @@ import {
     FormLabel,
     FormErrorMessage,
     FormHelperText,
-    Select,
     Input,
     useToast,
-    useMediaQuery
-  } from '@chakra-ui/react'
-
+    useMediaQuery,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    Text
+  } from '@chakra-ui/react';
+  import { ChevronDownIcon } from '@chakra-ui/icons';
   import supabaseService from "../../services/supabaseService";
 
 
@@ -26,6 +30,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
 
     const [types, setTypes] = useState([]);
     const [deviceTypeSelect, setDeviceTypeSelect] = useState("");
+    const [deviceNameSelected, setDeviceNameSelected] = useState("");
     const [deviceNameInput, setDeviceNameInput] = useState("");
     const [inputError, setInputError] = useState(false);
 
@@ -49,6 +54,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
 
     const onChangeSеlectValue = (e) => {
         setDeviceTypeSelect(e.target.value);
+        setDeviceNameSelected(e.target.dataset.name);
     }
 
     const handleDeviceInput = (e) => {
@@ -104,24 +110,49 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
             <ModalHeader>Добавить прибор учета</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-                <Select
-                mt={4}
-                maxW="320px"
-                size="md"
-                variant="outline"
-                focusBorderColor="teal.600"
-                defaultValue={"default"}
-                 onChange={onChangeSеlectValue}>
-                    <option value="default" disabled>Выберите тип прибора</option>
-                    {types && types.map(
-                        tp => ((<option
-                                    key={tp.id}
-                                    value={tp.id}
-                                    >
+                <Menu matchWidth>
+                    <MenuButton
+                    as={Button}
+                    w="100%"
+                    h="40px"
+                    variant="outline"
+                    bg="white"
+                    _hover={{ bg: "gray.200" }}
+                    _expanded={{ bg: "gray.200" }}
+                    rightIcon={<ChevronDownIcon />}
+                    textAlign="left"
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    >
+                        <Text fontWeight="400" noOfLines={1}>
+                            {deviceNameSelected || "Выберите тип прибора"}
+                        </Text>
+                    </MenuButton>
+                    <MenuList>
+                        {types && types.map(
+                            tp => ((
+                            <MenuItem
+                                key={tp.id}
+                                backgroundColor={deviceTypeSelect === tp.id ? "gray.100" : "transparent"}
+                                _hover={{ backgroundColor: "gray.300" }}
+                                onClick={ () => onChangeSеlectValue({
+                                    target: {
+                                        value: tp.id,
+                                        dataset: {
+                                            name: tp.type_name
+                                        }
+                                    }
+                                })}
+                            >
+                                <Text noOfLines={1}>
                                     {tp.type_name}
-                                </option>))
-                        )}
-                </Select>
+                                </Text>
+                            </MenuItem>
+                            ))
+                                )}
+                    </MenuList>
+                </Menu>
                 <FormControl isInvalid={inputError}>
                     <FormLabel mt={4}>Название прибора</FormLabel>
                     <Input
@@ -148,6 +179,7 @@ const AddDeviceModal = ({isOpen, onClose, selectedObjectId, selectedObject, devi
               onClick={() => {
                 onClose();
                 addUserDevice(selectedObjectId, deviceTypeSelect, deviceNameInput);
+                setDeviceNameSelected("");
                 }}>
                 Добавить
               </Button>
