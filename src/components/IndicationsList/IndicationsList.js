@@ -55,14 +55,17 @@ const IndicationsList = ({indications}) => {
                 align="stretch"
                 >
                         {indications && indications.map((ind, i) => ((
-                        <Fade in={indications} transition={{exit: {duration: 0.3}, enter: {duration: 0.3}}}>
+                        <Fade
+                        in={indications}
+                        transition={{exit: {duration: 0.3}, enter: {duration: 0.3}}}
+                        key={i}
+                        >
                             <Box
                             p={4}
                             w="100%"
                             h="60px"
                             cursor="pointer"
                             _hover={{ bg: "#ebedf0" }}
-                            key={i}
                             data-id={i}
                             onClick={handleOpenIndicationModal}
                             >
