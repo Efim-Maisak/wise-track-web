@@ -30,7 +30,7 @@ const BarChart = ({chartData, devices}) => {
 
 
     return (
-        <Box p={4}>
+        <Box paddingTop={4}>
             {chartData.map((item, index) => {
                 return (
                     <Box pb={4} key={index}>

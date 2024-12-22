@@ -18,11 +18,13 @@ import {
     Image,
     useToast,
     Stack,
+    HStack,
     useMediaQuery
   } from '@chakra-ui/react';
-  import { BsThreeDotsVertical } from "react-icons/bs";
-  import { DeleteIcon } from '@chakra-ui/icons';
-  import supabaseService from "../../services/supabaseService";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { DeleteIcon } from '@chakra-ui/icons';
+import supabaseService from "../../services/supabaseService";
+import NumberFlow from '@number-flow/react';
 
 
 const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, device}) => {
@@ -118,10 +120,19 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
                         />
                         <Box p={{base: "8px", sm: "8px", md: "16px"}}>
                             <Stack spacing={2}>
-                                <Text as="h6" fontWeight="500" color="gray.700">Прибор измерения:</Text>
-                                <Text color="gray.700">{device.device_type_id.type_name}</Text>
-                                <Text as="h6" fontWeight="500" color="gray.700">Текущие показания:</Text>
-                                <Text color="gray.700">{deviceLastValue} {device.device_type_id.units}</Text>
+                                <Text color="gray.700" fontSize={18}>{device.device_type_id.type_name}</Text>
+                                <HStack flexDirection="row" alignSelf="center">
+                                    <Box border="3px solid" borderRadius="md" borderColor="black.500" py={1} px={4}>
+                                        <Text as="h6" fontSize={30} fontWeight="500" color="black.500">
+                                            <NumberFlow
+                                            prefix="0"
+                                            value={deviceLastValue}
+                                            trend={+1}
+                                            />
+                                        </Text>
+                                    </Box>
+                                    <Text color="gray.700" fontSize={18}>{device.device_type_id.units}</Text>
+                                </HStack>
                             </Stack>
                         </Box>
                     </Flex>
