@@ -126,8 +126,9 @@ const DeviceModal = ({isOpen, onClose, deviceIsDeleted, setDeviceIsDeleted, devi
                                         <Text as="h6" fontSize={30} fontWeight="500" color="black.500">
                                             <NumberFlow
                                             prefix="0"
+                                            format={{ useGrouping: false }}
                                             value={deviceLastValue}
-                                            trend={+1}
+                                            trend={-1}
                                             />
                                         </Text>
                                     </Box>
